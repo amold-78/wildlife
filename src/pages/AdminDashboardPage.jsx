@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Shield, CheckCircle2, AlertTriangle, Search, Filter, 
   Users, DollarSign, Ticket, ArrowLeft, RefreshCw, 
-  Sparkles, QrCode
+  QrCode
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useBooking } from '../context/BookingContext';
@@ -76,32 +76,34 @@ export default function AdminDashboardPage({ onNavigate }) {
 
   if (!isAuthenticated || !isAdmin) {
     return (
-      <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-stone-950 text-stone-100">
-        <div className="max-w-md w-full text-center space-y-6 p-8 bg-stone-900/90 border border-amber-800/40 rounded-3xl shadow-2xl">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-950/60 border border-amber-500/40 flex items-center justify-center text-amber-400">
+      <div className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-[#071713] text-[#F0ECE1]">
+        <div className="max-w-md w-full text-center space-y-6 p-8 bg-[#0B221B] border border-[#C99A4A]/45 rounded-2xl shadow-2xl">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#113127] border border-[#C99A4A]/50 flex items-center justify-center text-[#E4B865]">
             <Shield className="w-8 h-8" />
           </div>
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">Restricted Territory</span>
-            <h2 className="text-2xl font-serif font-bold text-stone-100 mt-1">NTCA Ranger Admin Portal</h2>
-            <p className="text-xs text-stone-400 mt-2 leading-relaxed">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#E4B865]">Restricted Territory</span>
+            <h2 className="text-2xl font-serif font-bold text-[#F8F3E8] mt-1">NTCA Ranger Admin Portal</h2>
+            <p className="text-xs text-[#B8CEC4] mt-2 leading-relaxed">
               This administrative gate terminal requires authorized Forest Department credentials for park quota management and gate clearance.
             </p>
           </div>
 
           <div className="space-y-3 pt-2">
             <button
+              type="button"
               onClick={async () => {
                 await quickDemoLogin('admin');
-                showToast('Authorized as Ranger Admin (NTCA Chief Warden)! 🛡️', 'success');
+                showToast('Authorized as Ranger Admin (NTCA Chief Warden)', 'success');
               }}
-              className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-500 font-bold text-stone-950 rounded-xl transition shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 cursor-pointer text-sm"
+              className="w-full py-3 px-4 bg-[#C99A4A] hover:bg-[#D8AA5B] font-bold text-[#0D2922] rounded-xl transition shadow-md flex items-center justify-center gap-2 cursor-pointer text-sm"
             >
-              <Sparkles className="w-4 h-4" /> 1-Click Login as Ranger Admin
+              <Shield className="w-4 h-4" /> 1-Click Login as Ranger Admin
             </button>
             <button
+              type="button"
               onClick={() => openAuthModal('login')}
-              className="w-full py-2.5 px-4 bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-medium rounded-xl transition cursor-pointer"
+              className="w-full py-2.5 px-4 bg-[#113127] hover:bg-[#173F35] border border-[#265244] text-[#F4EBDA] text-xs font-medium rounded-xl transition cursor-pointer"
             >
               Sign In with Custom Officer Credentials
             </button>
@@ -112,7 +114,7 @@ export default function AdminDashboardPage({ onNavigate }) {
   }
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#071713] text-[#F0ECE1] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Top Header & Breadcrumb */}
@@ -144,7 +146,7 @@ export default function AdminDashboardPage({ onNavigate }) {
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-700/50 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Live WAL Database
+              <span className="w-2 h-2 rounded-full bg-emerald-400" /> Live WAL Database
             </span>
           </div>
         </div>
@@ -158,7 +160,7 @@ export default function AdminDashboardPage({ onNavigate }) {
                 <Ticket className="w-4 h-4 text-emerald-400" />
               </div>
               <div className="text-2xl font-bold text-stone-100">{stats.totalBookings}</div>
-              <span className="text-[11px] text-emerald-400 mt-1 block">
+              <span className="text-xs text-emerald-400 mt-1 block">
                 {stats.confirmedBookings} confirmed & valid
               </span>
             </div>
@@ -171,7 +173,7 @@ export default function AdminDashboardPage({ onNavigate }) {
               <div className="text-2xl font-bold text-amber-400">
                 ₹{stats.totalRevenue.toLocaleString('en-IN')}
               </div>
-              <span className="text-[11px] text-stone-400 mt-1 block">
+              <span className="text-xs text-stone-400 mt-1 block">
                 Allocated to Tiger Conservation Fund
               </span>
             </div>
@@ -182,7 +184,7 @@ export default function AdminDashboardPage({ onNavigate }) {
                 <CheckCircle2 className="w-4 h-4 text-blue-400" />
               </div>
               <div className="text-2xl font-bold text-blue-400">{stats.checkedInBookings}</div>
-              <span className="text-[11px] text-stone-400 mt-1 block">
+              <span className="text-xs text-stone-400 mt-1 block">
                 Checked in via QR / Barcode
               </span>
             </div>
@@ -190,10 +192,10 @@ export default function AdminDashboardPage({ onNavigate }) {
             <div className="bg-stone-900/90 border border-stone-800 p-5 rounded-2xl">
               <div className="flex items-center justify-between text-stone-400 mb-2">
                 <span className="text-xs uppercase tracking-wider font-semibold">Registered Travelers</span>
-                <Users className="w-4 h-4 text-purple-400" />
+                <Users className="w-4 h-4 text-[#C99A4A]" />
               </div>
-              <div className="text-2xl font-bold text-purple-400">{stats.totalUsers}</div>
-              <span className="text-[11px] text-stone-400 mt-1 block">
+              <div className="text-2xl font-bold text-[#C99A4A]">{stats.totalUsers}</div>
+              <span className="text-xs text-stone-400 mt-1 block">
                 Verified Government IDs on file
               </span>
             </div>
@@ -269,7 +271,7 @@ export default function AdminDashboardPage({ onNavigate }) {
               </div>
 
               <div className="pt-4 border-t border-stone-800 space-y-2">
-                <span className="text-[11px] text-stone-400 font-semibold uppercase tracking-wider block">
+                <span className="text-xs text-stone-400 font-semibold uppercase tracking-wider block">
                   Quick Test Codes:
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -316,7 +318,7 @@ export default function AdminDashboardPage({ onNavigate }) {
                         {verificationResult.success
                           ? verificationResult.alreadyCheckedIn
                             ? 'Gate Status: Traveler Already Admitted Earlier'
-                            : 'Gate Status: PERMIT VERIFIED — ENTRY AUTHORIZED'
+                            : 'Gate Status: PERMIT VERIFIED (ENTRY AUTHORIZED)'
                           : 'Gate Status: ACCESS DENIED'}
                       </h4>
                       <p className="text-xs mt-0.5 opacity-90">{verificationResult.message}</p>
@@ -373,7 +375,7 @@ export default function AdminDashboardPage({ onNavigate }) {
                           {verificationResult.booking.accompanyingGuests?.map((g, idx) => (
                             <div key={idx} className="p-2.5 bg-stone-900 rounded-xl border border-stone-800 flex items-center justify-between">
                               <span className="text-stone-300">{g.name} ({g.gender}, Age {g.age})</span>
-                              <span className="text-stone-500 text-[11px]">Accompanying Guest</span>
+                              <span className="text-stone-500 text-xs">Accompanying Guest</span>
                             </div>
                           ))}
                         </div>
@@ -423,7 +425,7 @@ export default function AdminDashboardPage({ onNavigate }) {
                         key={st.id}
                         type="button"
                         onClick={() => setStatusFilter(st.id)}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${
                           statusFilter === st.id
                             ? 'bg-amber-600 text-stone-950 font-bold shadow-xs'
                             : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800'
@@ -445,7 +447,7 @@ export default function AdminDashboardPage({ onNavigate }) {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-stone-800 text-stone-400 uppercase tracking-wider text-[11px]">
+                  <tr className="border-b border-stone-800 text-stone-400 uppercase tracking-wider text-xs">
                     <th className="pb-3 font-semibold">Permit Ref</th>
                     <th className="pb-3 font-semibold">Lead Guest</th>
                     <th className="pb-3 font-semibold">Reserve & Zone</th>
@@ -464,15 +466,15 @@ export default function AdminDashboardPage({ onNavigate }) {
                       </td>
                       <td className="py-3 text-stone-200 font-medium">
                         {b.leadGuest?.fullName || 'Traveler'}
-                        <span className="block text-[11px] text-stone-500">{b.userEmail}</span>
+                        <span className="block text-xs text-stone-500">{b.userEmail}</span>
                       </td>
                       <td className="py-3">
                         <span className="text-stone-200 font-medium">{b.safariName}</span>
-                        <span className="block text-[11px] text-stone-500">{b.zoneName}</span>
+                        <span className="block text-xs text-stone-500">{b.zoneName}</span>
                       </td>
                       <td className="py-3 text-stone-300">
                         {b.date}
-                        <span className="block text-[11px] text-stone-500">{b.shiftTime?.split('–')[0]}</span>
+                        <span className="block text-xs text-stone-500">{b.shiftTime?.split('–')[0]}</span>
                       </td>
                       <td className="py-3 text-stone-300">{b.vehicleType}</td>
                       <td className="py-3 font-semibold text-emerald-400">
@@ -480,7 +482,7 @@ export default function AdminDashboardPage({ onNavigate }) {
                       </td>
                       <td className="py-3">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          className={`px-2 py-0.5 rounded text-xs font-bold ${
                             b.status === 'CONFIRMED'
                               ? 'bg-emerald-950 text-emerald-400 border border-emerald-800/50'
                               : b.status === 'CHECKED_IN'
@@ -499,12 +501,12 @@ export default function AdminDashboardPage({ onNavigate }) {
                               setActiveTab('checkin');
                               handleVerifyGatePass(b.bookingRef);
                             }}
-                            className="px-2.5 py-1 bg-amber-600/20 hover:bg-amber-600/40 border border-amber-600/40 text-amber-300 font-semibold rounded-lg text-[11px] transition cursor-pointer"
+                            className="px-2.5 py-1 bg-amber-600/20 hover:bg-amber-600/40 border border-amber-600/40 text-amber-300 font-semibold rounded-lg text-xs transition cursor-pointer"
                           >
                             Check-In Pass
                           </button>
                         ) : (
-                          <span className="text-stone-600 text-[11px]">—</span>
+                          <span className="text-stone-600 text-xs">Cleared</span>
                         )}
                       </td>
                     </tr>

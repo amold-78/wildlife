@@ -11,14 +11,18 @@ import {
   Heart,
   Share2,
   ArrowRight,
-  Sparkles,
   CheckCircle2,
   Thermometer,
   Eye,
   ThumbsUp,
   MessageSquare,
   PenLine,
-  Send
+  Send,
+  ArrowLeft,
+  Footprints,
+  Sun,
+  Lock,
+  Zap
 } from 'lucide-react';
 import { DEFAULT_REVIEWS } from '../data/reviews';
 import { api } from '../services/api';
@@ -144,7 +148,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
     try {
       const saved = localStorage.getItem(`wildtrail_reviews_${safari.id}`);
       if (saved) return JSON.parse(saved);
-    } catch (e) {}
+    } catch {}
     return DEFAULT_REVIEWS[safari.id] || DEFAULT_REVIEWS["tadoba-national-park"] || [];
   });
 
@@ -182,7 +186,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
       author: reviewerName,
       avatar: reviewerName.slice(0, 2).toUpperCase(),
       rating: newRating,
-      date: newMonth,
+      date: 'Oct 2026',
       zone: newZone,
       shift: "Verified Expedition",
       wildlifeSpotted: selectedWildlifeTags.length > 0 ? selectedWildlifeTags : ["Royal Bengal Tiger"],
@@ -196,7 +200,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
     setReviews(updated);
     try {
       localStorage.setItem(`wildtrail_reviews_${safari.id}`, JSON.stringify(updated));
-    } catch (err) {}
+    } catch {}
 
     // Asynchronously save review into backend database
     api.reviews.create(safari.id, {
@@ -210,7 +214,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
       content: createdReview.content
     }).catch(e => console.warn('Backend review sync note:', e.message));
 
-    showToast("🎉 Thank you! Your review has been published.", "success");
+    showToast("Thank you! Your field log review has been published.", "success");
     setNewAuthor("");
     setNewTitle("");
     setNewContent("");
@@ -224,58 +228,69 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
-      
-      {/* Top Breadcrumb & Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <button
-          onClick={onBack}
-          className="text-xs font-bold text-stone-600 hover:text-[#0D2922] transition flex items-center gap-1.5"
-        >
-          <span>← Back to Safaris</span>
-        </button>
+    <div className="min-h-screen">
+      {/* Deep Canopy Emerald Reserve Header Strip */}
+      <section className="bg-gradient-to-b from-[#09211A] to-[#0D2922] border-b border-[#265244] text-[#F4EBDA]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <button
+              type="button"
+              onClick={onBack}
+              className="text-xs font-bold text-[#C8D8D0] hover:text-[#E4B865] transition flex items-center gap-1.5 cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-[#C99A4A]" />
+              <span>Back to All Reserves</span>
+            </button>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleShare}
-            className="p-2 rounded-full border border-[#E9DFC9] bg-white text-stone-700 hover:bg-[#F8F7F2] transition"
-            title="Share Safari"
-          >
-            <Share2 className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => toggleWishlist(safari.id)}
-            className={`p-2 rounded-full border border-[#E9DFC9] transition ${
-              isSaved ? 'bg-rose-50 text-rose-600 border-rose-300' : 'bg-white text-stone-700 hover:bg-[#F8F7F2]'
-            }`}
-            title="Save to Wishlist"
-          >
-            <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
-          </button>
-        </div>
-      </div>
-
-      {/* Hero Header & Gallery */}
-      <div className="space-y-4">
-        <div>
-          <div className="flex flex-wrap items-center gap-3 text-xs text-stone-500 mb-2">
-            <span className="flex items-center gap-1 text-[#173F35] font-semibold">
-              <MapPin className="w-3.5 h-3.5" />
-              {safari.state}, India
-            </span>
-            <span>·</span>
-            <span className="bg-[#E9DFC9]/60 text-stone-800 px-2.5 py-0.5 rounded-full font-bold">
-              {safari.highlight}
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="p-2 rounded-xl border border-[#265244] bg-[#0B221B] text-[#E9DFC9] hover:border-[#C99A4A] transition cursor-pointer"
+                title="Share Safari"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => toggleWishlist(safari.id)}
+                className={`p-2 rounded-xl border transition cursor-pointer ${
+                  isSaved
+                    ? 'bg-[#C99A4A] text-[#0D2922] border-[#F3D28E]'
+                    : 'bg-[#0B221B] text-[#E9DFC9] border-[#265244] hover:border-[#C99A4A]'
+                }`}
+                title="Save to Wishlist"
+              >
+                <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+              </button>
+            </div>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-5xl font-extrabold text-[#0D2922]">
-            {safari.name}
-          </h1>
-          <p className="text-sm sm:text-base text-stone-600 italic font-serif mt-1">
-            "{safari.subtitle}"
-          </p>
+          <div>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-[#C8D8D0] mb-2">
+              <span className="flex items-center gap-1 text-[#E4B865] font-semibold">
+                <MapPin className="w-3.5 h-3.5 text-[#C99A4A]" />
+                {safari.state}, India
+              </span>
+              <span>·</span>
+              <span className="bg-[#113127] text-[#F4EBDA] border border-[#265244] px-2.5 py-0.5 rounded-lg font-semibold">
+                {safari.highlight}
+              </span>
+            </div>
+
+            <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[#F8F3E8] tracking-tight">
+              {safari.name}
+            </h1>
+            <p className="text-sm sm:text-base text-[#C8D8D0] italic font-serif mt-1.5">
+              &ldquo;{safari.subtitle}&rdquo;
+            </p>
+          </div>
         </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      {/* Gallery */}
+      <div className="space-y-4">
 
         {/* Gallery Grid - Equal Height System */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -317,7 +332,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
           {/* Quick Metrics Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-3xl bg-white dark:bg-[#071713] border border-[#E9DFC9] dark:border-[#1A382F] shadow-sm">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Rating</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Rating</p>
               <div className="flex items-center gap-1.5 font-bold text-base text-[#0D2922] dark:text-stone-100 mt-0.5">
                 <Star className="w-4 h-4 fill-current text-[#C99A4A]" />
                 <span>{safari.rating}</span>
@@ -326,7 +341,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
             </div>
 
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Duration</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Duration</p>
               <div className="flex items-center gap-1.5 font-bold text-base text-[#0D2922] dark:text-stone-100 mt-0.5">
                 <Clock className="w-4 h-4 text-stone-500 dark:text-stone-400" />
                 <span>{safari.duration}</span>
@@ -334,7 +349,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
             </div>
 
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Best Season</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Best Season</p>
               <div className="flex items-center gap-1.5 font-bold text-base text-[#0D2922] dark:text-stone-100 mt-0.5">
                 <Calendar className="w-4 h-4 text-stone-500 dark:text-stone-400" />
                 <span className="text-sm">Oct – Jun</span>
@@ -342,7 +357,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
             </div>
 
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Starting Price</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Starting Price</p>
               <div className="font-bold text-base text-[#0D2922] dark:text-stone-100 mt-0.5">
                 ₹{safari.pricePerPerson.toLocaleString('en-IN')} <span className="text-xs font-normal text-stone-500 dark:text-stone-400">/ person</span>
               </div>
@@ -367,9 +382,9 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                   <div key={idx} className="p-3 rounded-2xl bg-[#F8F7F2] dark:bg-stone-900/90 border border-[#E9DFC9] dark:border-stone-800 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-bold text-[#0D2922] dark:text-stone-100">{zone.name}</p>
-                      <p className="text-[11px] text-stone-500 dark:text-stone-400">Entry: {zone.entryGate}</p>
+                      <p className="text-xs text-stone-500 dark:text-stone-400">Entry: {zone.entryGate}</p>
                     </div>
-                    <span className="px-2.5 py-0.5 text-[10px] font-semibold bg-[#E9DFC9] dark:bg-emerald-950 text-stone-800 dark:text-emerald-300 border border-transparent dark:border-emerald-800/80 rounded-full">
+                    <span className="px-2.5 py-0.5 text-xs font-semibold bg-[#E9DFC9] dark:bg-emerald-950 text-stone-800 dark:text-emerald-300 border border-transparent dark:border-emerald-800/80 rounded-full">
                       {zone.status}
                     </span>
                   </div>
@@ -389,25 +404,27 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                   Based on recent patrol tracking logs and historical sighting records
                 </p>
               </div>
-              <Sparkles className="w-5 h-5 text-[#C99A4A]" />
+              <Footprints className="w-5 h-5 text-[#C99A4A]" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               {safari.wildlifeProbabilities.map((item, idx) => (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-2xl bg-[#FAF8F2] dark:bg-stone-900/90 border border-[#E9DFC9] dark:border-stone-800 flex items-center justify-between"
+                  className="p-3.5 rounded-2xl bg-[#FAF8F2] dark:bg-[#0B221B] border border-[#E9DFC9] dark:border-[#244E40] flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl select-none">{item.icon}</span>
+                    <div className="w-9 h-9 rounded-xl bg-[#0D2922] border border-[#C99A4A]/50 text-[#E4B865] flex items-center justify-center shrink-0">
+                      <Footprints className="w-4 h-4" />
+                    </div>
                     <div>
                       <p className="font-bold text-xs text-[#0D2922] dark:text-stone-100">{item.animal}</p>
-                      <p className="text-[11px] text-stone-500 dark:text-stone-400">{item.probability}</p>
+                      <p className="text-xs text-stone-500 dark:text-stone-400">{item.probability}</p>
                     </div>
                   </div>
 
                   <span
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider ${
                       item.level === 'high'
                         ? 'bg-emerald-100 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/90 dark:text-emerald-300 dark:border-emerald-800/80'
                         : 'bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-950/90 dark:text-amber-300 dark:border-amber-800/80'
@@ -433,7 +450,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
               </div>
 
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-800 dark:text-emerald-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>Prime Open Window: Oct – Jun</span>
               </div>
             </div>
@@ -487,7 +504,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                       {m.month}
                     </span>
                     <span className={`w-3.5 h-3.5 rounded-full shadow-sm transition-transform ${isSelected ? 'scale-125' : ''} ${current.dotClass}`} />
-                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-extrabold tracking-tight ${current.badgeColor}`}>
+                    <span className={`px-1.5 py-0.5 rounded text-xs font-extrabold tracking-tight ${current.badgeColor}`}>
                       {current.label}
                     </span>
                   </button>
@@ -510,7 +527,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                         <span className="font-serif text-lg font-bold text-[#0D2922] dark:text-[#F1F8F4]">
                           {activeMonthSeason.month} Season Intel
                         </span>
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wider ${
                           activeMonthSeason.status === 'peak' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700' :
                           activeMonthSeason.status === 'excellent' ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-300 border border-teal-300 dark:border-teal-700' :
                           activeMonthSeason.status === 'limited' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300 border border-amber-300 dark:border-amber-700' :
@@ -557,7 +574,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                         />
                       </div>
 
-                      <p className="text-[10px] text-stone-500 dark:text-[#728D81] leading-tight">
+                      <p className="text-xs text-stone-500 dark:text-[#728D81] leading-tight">
                         {activeMonthSeason.status === 'closed'
                           ? 'Core gates closed for NTCA monsoon protection. Buffer safaris remain operational.'
                           : 'Calculated from 5-year forest department encounter logs.'}
@@ -623,7 +640,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                 <p className="text-xs font-bold text-stone-600 dark:text-[#A8C4B8]">
                   Based on {safari.reviewCount + reviews.length - 3} verified expeditions
                 </p>
-                <span className="mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                <span className="mt-2 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
                   98% Recommended
                 </span>
               </div>
@@ -693,7 +710,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                       className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:border-emerald-600 focus:bg-white dark:focus:bg-stone-900"
                     />
                   </div>
-                  <span className="text-[11px] text-stone-400 sm:mt-5">
+                  <span className="text-xs text-stone-400 sm:mt-5">
                     No login required to post a review.
                   </span>
                 </div>
@@ -763,7 +780,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
               {/* Optional Zone & Submit Action */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                 <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                  <span className="text-stone-500 dark:text-[#A8C4B8] text-[11px] font-medium mr-1">Zone:</span>
+                  <span className="text-stone-500 dark:text-[#A8C4B8] text-xs font-medium mr-1">Zone:</span>
                   {safari.zones.map((z, idx) => {
                     const isSelected = newZone === z.name;
                     return (
@@ -820,23 +837,27 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                 <div className="flex flex-wrap items-center gap-2">
                   {[
                     { id: 'all', label: `All Reviews (${reviews.length})` },
-                    { id: 'tiger', label: `🐅 Tiger Sightings` },
-                    { id: 'dawn', label: `🌅 Dawn Safaris` },
-                    { id: 'five_star', label: `★ 5-Star Only` }
-                  ].map((f) => (
-                    <button
-                      key={f.id}
-                      type="button"
-                      onClick={() => setReviewFilter(f.id)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                        reviewFilter === f.id
-                          ? 'bg-[#0D2922] dark:bg-[#C99A4A] text-white dark:text-[#0D2922] shadow-sm'
-                          : 'bg-[#FAF8F2] dark:bg-white/5 text-stone-700 dark:text-[#C5D9D0] border border-[#E9DFC9] dark:border-[#1A382F] hover:border-[#C99A4A]'
-                      }`}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
+                    { id: 'tiger', label: 'Tiger Sightings', Icon: Footprints },
+                    { id: 'dawn', label: 'Dawn Safaris', Icon: Sun },
+                    { id: 'five_star', label: '5-Star Only', Icon: Star }
+                  ].map((f) => {
+                    const ChipIcon = f.Icon;
+                    return (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => setReviewFilter(f.id)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer inline-flex items-center gap-1.5 ${
+                          reviewFilter === f.id
+                            ? 'bg-[#0D2922] dark:bg-[#C99A4A] text-white dark:text-[#0D2922] shadow-sm'
+                            : 'bg-[#FAF8F2] dark:bg-white/5 text-stone-700 dark:text-[#C5D9D0] border border-[#E9DFC9] dark:border-[#1A382F] hover:border-[#C99A4A]'
+                        }`}
+                      >
+                        {ChipIcon && <ChipIcon className="w-3.5 h-3.5 text-[#C99A4A] dark:text-current" />}
+                        <span>{f.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -868,13 +889,13 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                                 {rev.author}
                               </h4>
                               {rev.verified && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                                   <Shield className="w-3 h-3 fill-emerald-600 text-emerald-600" />
                                   <span>Verified Guest</span>
                                 </span>
                               )}
                             </div>
-                            <p className="text-[11px] text-stone-500 dark:text-[#728D81]">
+                            <p className="text-xs text-stone-500 dark:text-[#728D81]">
                               Visited {rev.date} · {rev.zone} · {rev.shift}
                             </p>
                           </div>
@@ -894,9 +915,10 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                           {rev.wildlifeSpotted.map((animal, aIdx) => (
                             <span
                               key={aIdx}
-                              className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white dark:bg-[#071713] text-stone-700 dark:text-[#C5D9D0] border border-[#E9DFC9] dark:border-[#1A382F]"
+                              className="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-white dark:bg-[#071713] text-stone-700 dark:text-[#C5D9D0] border border-[#E9DFC9] dark:border-[#1A382F] inline-flex items-center gap-1.5"
                             >
-                              🐾 {animal}
+                              <Footprints className="w-3 h-3 text-[#C99A4A]" />
+                              <span>{animal}</span>
                             </span>
                           ))}
                         </div>
@@ -914,7 +936,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
 
                       {/* Helpful Button Action */}
                       <div className="pt-2 flex items-center justify-between border-t border-stone-200/60 dark:border-[#143228]">
-                        <span className="text-[11px] text-stone-500 dark:text-[#728D81]">
+                        <span className="text-xs text-stone-500 dark:text-[#728D81]">
                           Verified state forest department entry pass
                         </span>
 
@@ -953,10 +975,10 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#C99A4A]/20 text-[#0D2922] dark:text-amber-300 uppercase tracking-wider">
                   Live Gate Inventory
                 </span>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
               </div>
               <div className="mt-3">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Selected Slot Fare</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500">Selected Slot Fare</p>
                 <p className="text-3xl font-serif font-extrabold text-[#0D2922] dark:text-stone-100">
                   ₹{selectedSlot.price.toLocaleString('en-IN')}{" "}
                   <span className="text-xs font-sans font-normal text-stone-500 dark:text-stone-400">/ person</span>
@@ -986,8 +1008,8 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                         <span className="font-bold text-xs text-[#0D2922] dark:text-[#F1F8F4]">{slot.title}</span>
                         <span className="font-bold text-xs text-[#C99A4A]">₹{slot.price}</span>
                       </div>
-                      <p className="text-[11px] text-stone-500 dark:text-[#A8C4B8] mt-0.5">{slot.time} · {slot.type}</p>
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 dark:border-[#132E27] text-[10px]">
+                      <p className="text-xs text-stone-500 dark:text-[#A8C4B8] mt-0.5">{slot.time} · {slot.type}</p>
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 dark:border-[#132E27] text-xs">
                         <span className="text-stone-500 dark:text-[#728D81]">{slot.badge}</span>
                         <span className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -1002,23 +1024,30 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
 
             {/* Direct Book CTA */}
             <button
+              type="button"
               onClick={() => onBookSlot(safari.id, selectedSlot)}
-              className="w-full py-4 rounded-2xl bg-[#0D2922] dark:bg-[#C99A4A] hover:bg-[#173F35] dark:hover:bg-[#B88939] text-white dark:text-[#0D2922] font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl hover:shadow-2xl transition active:scale-95"
+              className="w-full py-4 rounded-xl bg-[#C99A4A] hover:bg-[#D8AA5B] text-[#0D2922] font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition cursor-pointer"
             >
-              <span>Proceed to Booking</span>
-              <ArrowRight className="w-4 h-4 text-[#C99A4A] dark:text-[#0D2922]" />
+              <span>Proceed to Permit Booking</span>
+              <ArrowRight className="w-4 h-4 text-[#0D2922]" />
             </button>
 
-            <div className="text-[11px] text-stone-500 text-center space-y-1">
-              <p>🔒 100% Guaranteed official forest department permit</p>
-              <p>⚡ Instant SMS and WhatsApp confirmation pass</p>
+            <div className="text-xs text-stone-500 dark:text-[#9AB3A8] space-y-1.5 pt-1">
+              <p className="flex items-center justify-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-[#C99A4A]" />
+                <span>100% Guaranteed official forest department permit</span>
+              </p>
+              <p className="flex items-center justify-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-[#C99A4A]" />
+                <span>Instant digital gate voucher &amp; SMS pass</span>
+              </p>
             </div>
 
           </div>
         </div>
 
       </div>
-
+      </div>
     </div>
   );
 }

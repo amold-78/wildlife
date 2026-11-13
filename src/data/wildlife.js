@@ -7,10 +7,9 @@ export const WILDLIFE_DATA = [
     diet: "Carnivore (Chital, Sambar, Gaur, Wild Boar)",
     habitat: "Tropical moist deciduous, dry teak forest, alluvial grasslands",
     bestChance: "Early morning (06:00 - 08:30 AM) and dusk waterholes",
-    icon: "🐅",
     image: "https://images.unsplash.com/photo-1549480017-d76466a4b7e8?auto=format&fit=crop&w=1200&q=80",
-    description: "The crown apex predator of the Indian subcontinent. Solitary, territorial, and remarkably stealthy, Bengal Tigers are renowned for their majestic orange-and-black coats and formidable power.",
-    funFact: "No two Bengal tigers have the same stripe pattern. Forest guards use stripe symmetry to track distinct individuals.",
+    description: "The apex predator of the Indian subcontinent. Solitary, territorial, and stealthy, Bengal Tigers are recognized by their orange-and-black coats and territorial patrol routes.",
+    funFact: "No two Bengal tigers share the same stripe pattern. Forest guards use stripe symmetry to identify resident individuals.",
     topReserves: ["Tadoba Andhari", "Ranthambore", "Bandhavgarh", "Pench", "Kanha"]
   },
   {
@@ -21,10 +20,9 @@ export const WILDLIFE_DATA = [
     diet: "Opportunistic Carnivore (Monkeys, Peafowl, Small Ungulates)",
     habitat: "Rocky outcrops, dense hill slopes, forest fringes",
     bestChance: "Late afternoon rocky ledges and tall tree branches",
-    icon: "🐆",
     image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=1200&q=80",
-    description: "Incredible climbers and masters of camouflage, Indian leopards adapt smoothly across diverse landscapes, often stashing their kills high in tree branches away from tigers and wild dogs.",
-    funFact: "Leopards can pull prey up to three times their own body weight up into vertical branches.",
+    description: "Agile climbers and masters of camouflage, Indian leopards adapt across diverse habitats, often caching prey high in tree branches away from tigers and wild dogs.",
+    funFact: "Leopards can haul prey up to three times their own body weight into vertical tree forks.",
     topReserves: ["Pench", "Jawai Bandh", "Tadoba Andhari", "Ranthambore"]
   },
   {
@@ -35,10 +33,9 @@ export const WILDLIFE_DATA = [
     diet: "Herbivore (Grasses, tree bark, roots, bamboo leaves)",
     habitat: "Sub-Himalayan grasslands, river valleys, deciduous forests",
     bestChance: "Midday & afternoon river crossings and grass clearings",
-    icon: "🐘",
     image: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=1200&q=80",
-    description: "The revered megaherbivore and ecosystem engineer of Indian jungles. Traveling in matriarchal herds, their daily river crossings and dust baths are among nature's most moving spectacles.",
-    funFact: "An adult Asian elephant can drink up to 200 liters of water in a single day and spends 16 hours foraging.",
+    description: "The megaherbivore and ecosystem engineer of Indian forests. Traveling in matriarchal herds, their daily river crossings and dust baths shape the grassland corridors.",
+    funFact: "An adult Asian elephant drinks up to 200 liters of water in a single day and spends 16 hours foraging.",
     topReserves: ["Jim Corbett", "Kaziranga", "Kabini (Nagarhole)", "Periyar"]
   },
   {
@@ -49,10 +46,9 @@ export const WILDLIFE_DATA = [
     diet: "Herbivore (Elephant grass, aquatic plants, shrubs)",
     habitat: "Alluvial tall grasslands and riverine floodplains",
     bestChance: "Morning mist along shallow elephant grass wetlands",
-    icon: "🦏",
     image: "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?auto=format&fit=crop&w=1200&q=80",
-    description: "Possessing skin that looks like thick armor plating, the Indian Rhino is a prehistoric marvel. Kaziranga has spearheaded one of the world's greatest wildlife conservation recoveries.",
-    funFact: "Their single horn is not bone, but solid keratin — the same structural protein found in human hair and fingernails.",
+    description: "Recognized by its armor-like skin folds, the Greater One-Horned Rhinoceros thrives in the Brahmaputra floodplains of Kaziranga following a century of strict protection.",
+    funFact: "Their single horn is not bone, but solid keratin: the same structural protein found in human hair and fingernails.",
     topReserves: ["Kaziranga", "Manas", "Jaldapara"]
   },
   {
@@ -63,10 +59,9 @@ export const WILDLIFE_DATA = [
     diet: "Myrmecophage (Termites, ants, honeycomb, fallen fruits)",
     habitat: "Dry deciduous scrub forests with rocky caverns and termite mounds",
     bestChance: "Dawn and twilight near Mahua trees and anthills",
-    icon: "🐻",
     image: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=1200&q=80",
-    description: "Shaggy, vocal, and armed with sickle-like claws, sloth bears are specially evolved to suck up termites through a gap in their teeth with loud vacuum-like sounds audible from 100 meters away.",
-    funFact: "Sloth bear mothers carry their cubs riding directly on their backs, even while trotting or fighting off rivals.",
+    description: "Shaggy, vocal, and armed with curved digging claws, sloth bears are adapted to extract termites through a gap in their upper incisors, producing suction sounds audible from 100 meters.",
+    funFact: "Sloth bear mothers carry their cubs directly on their backs while foraging and moving between dens.",
     topReserves: ["Tadoba Andhari", "Satpura", "Daroji Bear Sanctuary", "Kanha"]
   },
   {
@@ -77,10 +72,9 @@ export const WILDLIFE_DATA = [
     diet: "Herbivore (Meadow grasses & aquatic reeds)",
     habitat: "Open grassy maidans and Sal forest fringes",
     bestChance: "Early morning frost-covered meadows during winter rut",
-    icon: "🦌",
     image: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=1200&q=80",
-    description: "The official mascot ('Bhoorsingh the Barasingha') of Kanha. Literally translating to 'twelve horns' for their majestic branched antlers, they were brought back from near extinction.",
-    funFact: "Unlike northern swamp deer who live in wet marshes, this sub-species adapted to live on hard, dry meadow soils.",
+    description: "Endemic to Kanha's grassy maidans, the Hardground Barasingha is named for its twelve-tined antlers and was recovered from fewer than 70 individuals through habitat management.",
+    funFact: "Unlike northern swamp deer that inhabit marshes, this subspecies adapted to firm meadow soils in Central India.",
     topReserves: ["Kanha", "Dudhwa"]
   }
 ];

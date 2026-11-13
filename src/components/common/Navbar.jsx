@@ -1,15 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useBooking } from '../../context/BookingContext';
 import { useAuth } from '../../context/AuthContext';
-import { 
-  Heart, Menu, X, Sun, Moon, User, Shield, 
-  LogOut, ChevronDown, Ticket
+import {
+  Heart,
+  Menu,
+  X,
+  Sun,
+  Moon,
+  User,
+  Shield,
+  LogOut,
+  ChevronDown,
+  Ticket,
+  Compass,
+  ArrowUpRight,
 } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage }) {
   const { bookings, wishlist, darkMode, toggleDarkMode, setShowSavedOnly } = useBooking();
   const { user, isAuthenticated, isAdmin, openAuthModal, logout } = useAuth();
-  
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -39,158 +49,205 @@ export default function Navbar({ activePage, setActivePage }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FDFBF7]/90 dark:bg-[#081512]/90 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-        
-        {/* Brand Logo */}
+    <header className="sticky top-0 z-40 h-18 bg-[#09211A]/90 dark:bg-[#061510]/92 backdrop-blur-xl border-b border-[#265244]/85 text-[#F4EBDA] transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-8">
+        {/* Zone 1: Single-line Brand Wordmark + Authored Cartographic Compass Emblem */}
         <button
+          type="button"
           onClick={() => {
             setShowSavedOnly?.(false);
             handleNavClick('home');
           }}
-          className="flex items-center gap-3 text-left group focus:outline-none cursor-pointer"
+          className="flex items-center gap-3 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A] rounded-xl py-1 cursor-pointer whitespace-nowrap shrink-0"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F2D24] to-[#1E4D3E] dark:from-[#173F33] dark:to-[#0D261E] border border-amber-600/30 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
-            <span className="text-xl select-none">🐅</span>
-          </div>
-          <div>
-            <span className="text-xl font-serif font-bold tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-emerald-800 dark:group-hover:text-amber-400 transition-colors">
-              WildTrail
-            </span>
-            <span className="block text-[10px] tracking-widest uppercase font-semibold text-amber-700 dark:text-amber-500">
-              National Parks of India
-            </span>
-          </div>
+          <span
+            aria-hidden="true"
+            className="w-9 h-9 rounded-xl bg-[#103328] border border-[#C99A4A]/45 flex items-center justify-center transition-transform duration-200 group-hover:scale-105"
+          >
+            <svg viewBox="0 0 28 28" fill="none" className="w-5 h-5">
+              {/* Outer Topographic Compass Ring */}
+              <circle
+                cx="14"
+                cy="14"
+                r="10.5"
+                stroke="#C99A4A"
+                strokeWidth="1.3"
+                strokeDasharray="3 2"
+              />
+              {/* Winding S-Curve Trail Line inside Compass */}
+              <path
+                d="M 14 4.5 C 18.5 8, 9.5 13, 14 16.5 C 17.5 19.5, 11.5 21.5, 14 23.5"
+                stroke="#E4B865"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+              {/* North Waypoint Diamond */}
+              <polygon points="14,2 15.8,5 14,4.2 12.2,5" fill="#E4B865" />
+            </svg>
+          </span>
+          <span className="font-serif text-xl font-bold tracking-tight text-[#F6F1E5] group-hover:text-[#E4B865] transition-colors whitespace-nowrap shrink-0">
+            WildTrail
+          </span>
         </button>
 
-        {/* Center Navigation Links - Minimal, Clean & Elegant */}
-        <nav className="hidden md:flex items-center gap-1">
+        {/* Zone 2: Clean Single-Line Editorial Navigation Links */}
+        <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => {
             const isActive = activePage === link.id;
             return (
               <button
                 key={link.id}
+                type="button"
                 onClick={() => {
                   if (link.id === 'explore') {
                     setShowSavedOnly?.(false);
                   }
                   handleNavClick(link.id);
                 }}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer relative ${
+                className={`relative py-2 text-sm font-medium transition-colors cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A] rounded-md ${
                   isActive
-                    ? 'text-emerald-900 dark:text-amber-400 font-semibold'
-                    : 'text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-stone-200/50 dark:hover:bg-stone-800/50'
+                    ? 'text-[#E4B865] font-semibold'
+                    : 'text-[#D0E0D8] hover:text-white'
                 }`}
               >
-                {link.label}
+                <span>{link.label}</span>
                 {isActive && (
-                  <span className="absolute bottom-0.5 left-4 right-4 h-0.5 bg-emerald-800 dark:bg-amber-400 rounded-full" />
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-[#C99A4A] rounded-full"
+                  />
                 )}
               </button>
             );
           })}
         </nav>
 
-        {/* Right Consolidated Actions */}
-        <div className="hidden md:flex items-center gap-2.5">
-          
-          {/* Wishlist Shortcut */}
+        {/* Zone 3: Consolidated Expedition Controls & Primary CTA */}
+        <div className="hidden md:flex items-center gap-2.5 shrink-0">
+          {/* Saved Reserves Button */}
           <button
+            type="button"
             onClick={() => {
               setShowSavedOnly?.(true);
               handleNavClick('explore');
             }}
+            aria-label="Saved Safaris"
             title="Saved Safaris"
-            className="relative p-2 rounded-lg text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-mono tabular-nums text-[#D0E0D8] hover:text-white hover:bg-[#13382C] border border-transparent hover:border-[#285948] transition-colors cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A]"
           >
-            <Heart className={`w-4 h-4 ${wishlist.length > 0 ? 'text-amber-500 fill-amber-500/20' : ''}`} />
-            {wishlist.length > 0 && (
-              <span className="absolute top-1 right-1 w-2 h-2 bg-amber-600 rounded-full" />
-            )}
+            <Heart
+              className={`w-4 h-4 ${
+                wishlist.length > 0 ? 'text-[#E4B865] fill-[#E4B865]/25' : ''
+              }`}
+            />
+            {wishlist.length > 0 && <span>{wishlist.length}</span>}
           </button>
 
-          {/* Day / Night Theme Toggle */}
+          {/* Day / Night Safari Theme Toggle */}
           <button
+            type="button"
             onClick={toggleDarkMode}
-            title={darkMode ? "Switch to Day Mode" : "Switch to Night Safari Dark Mode"}
-            className="p-2 rounded-lg text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 transition cursor-pointer"
+            aria-label={darkMode ? 'Switch to Day Mode' : 'Switch to Night Safari Dark Mode'}
+            title={darkMode ? 'Switch to Day Mode' : 'Switch to Night Safari Dark Mode'}
+            className="p-2 rounded-xl text-[#D0E0D8] hover:text-white hover:bg-[#13382C] border border-transparent hover:border-[#285948] transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A]"
           >
             {darkMode ? (
-              <Sun className="w-4 h-4 text-amber-400" />
+              <Sun className="w-4 h-4 text-[#E4B865]" />
             ) : (
-              <Moon className="w-4 h-4" />
+              <Moon className="w-4 h-4 text-[#D0E0D8]" />
             )}
           </button>
 
-          <div className="h-4 w-px bg-stone-300 dark:bg-stone-800 mx-1" />
+          <div aria-hidden="true" className="h-4 w-px bg-[#234D3E] mx-0.5" />
 
-          {/* User Account / Profile Area */}
+          {/* User Account / Auth Controls */}
           {isAuthenticated ? (
             <div className="relative" ref={dropdownRef}>
               <button
+                type="button"
+                aria-expanded={userMenuOpen}
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl border border-stone-300/80 dark:border-stone-800 bg-white/70 dark:bg-stone-900/70 hover:border-emerald-600/50 transition cursor-pointer shadow-sm"
+                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl border border-[#2B5D4B] bg-[#102E24] hover:border-[#C99A4A]/70 text-[#F4EBDA] transition-colors cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A]"
               >
-                <div className="w-6 h-6 rounded-lg bg-emerald-800 text-stone-100 flex items-center justify-center text-[11px] font-bold">
+                <span className="w-6 h-6 rounded-lg bg-[#1A4738] border border-[#C99A4A]/40 text-[#E4B865] flex items-center justify-center text-xs font-mono font-bold">
                   {user.name ? user.name.slice(0, 2).toUpperCase() : 'TR'}
-                </div>
-                <div className="text-left text-xs">
-                  <span className="font-semibold text-stone-800 dark:text-stone-200 max-w-[90px] truncate block leading-tight">
-                    {user.name?.split(' ')[0]}
-                  </span>
-                </div>
-                <ChevronDown className="w-3.5 h-3.5 text-stone-400 ml-0.5" />
+                </span>
+                <span className="text-xs font-semibold text-[#F4EBDA] max-w-[96px] truncate">
+                  {user.name?.split(' ')[0]}
+                </span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-[#9EB7AC] transition-transform duration-200 ${
+                    userMenuOpen ? 'rotate-180' : ''
+                  }`}
+                />
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-60 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-xl py-2 z-50 text-stone-800 dark:text-stone-200">
-                  <div className="px-4 py-2.5 border-b border-stone-100 dark:border-stone-800">
-                    <p className="text-xs font-bold text-stone-900 dark:text-stone-100 truncate">{user.name}</p>
-                    <p className="text-[11px] text-stone-500 truncate">{user.email}</p>
-                    <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                      {isAdmin ? '🛡️ Ranger Admin' : user.tier || '🌿 Eco Explorer'}
-                    </span>
+                <div className="absolute right-0 mt-2 w-60 bg-[#0A221B] border border-[#285948] rounded-2xl py-2 z-50 text-[#F4EBDA]">
+                  <div className="px-4 py-2.5 border-b border-[#1D4235]">
+                    <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                    <p className="text-xs text-[#9EB7AC] truncate">{user.email}</p>
+                    <p className="mt-1 inline-flex items-center gap-1.5 text-xs font-medium text-[#E4B865]">
+                      {isAdmin ? (
+                        <>
+                          <Shield className="w-3.5 h-3.5" />
+                          <span>Ranger Admin</span>
+                        </>
+                      ) : (
+                        <>
+                          <Compass className="w-3.5 h-3.5" />
+                          <span>{user.tier || 'Eco Explorer'}</span>
+                        </>
+                      )}
+                    </p>
                   </div>
 
                   <div className="py-1">
                     <button
+                      type="button"
                       onClick={() => handleNavClick('profile')}
-                      className="w-full px-4 py-2 text-left text-xs hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-between transition"
+                      className="w-full px-4 py-2 text-left text-xs text-[#E5EFEA] hover:bg-[#13382C] flex items-center justify-between transition-colors cursor-pointer"
                     >
                       <span className="flex items-center gap-2">
-                        <Ticket className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <Ticket className="w-3.5 h-3.5 text-[#E4B865]" />
                         <span>My Gate Passes</span>
                       </span>
                       {bookings.length > 0 && (
-                        <span className="px-1.5 py-0.2 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold rounded">
+                        <span className="font-mono tabular-nums text-xs font-bold text-[#E4B865]">
                           {bookings.length}
                         </span>
                       )}
                     </button>
 
                     <button
+                      type="button"
                       onClick={() => handleNavClick('profile')}
-                      className="w-full px-4 py-2 text-left text-xs hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center gap-2 transition"
+                      className="w-full px-4 py-2 text-left text-xs text-[#E5EFEA] hover:bg-[#13382C] flex items-center gap-2 transition-colors cursor-pointer"
                     >
-                      <User className="w-3.5 h-3.5 text-stone-500" />
-                      <span>Profile & ID Status</span>
+                      <User className="w-3.5 h-3.5 text-[#9EB7AC]" />
+                      <span>Profile &amp; ID Status</span>
                     </button>
 
                     {isAdmin && (
                       <button
+                        type="button"
                         onClick={() => handleNavClick('admin')}
-                        className="w-full px-4 py-2 text-left text-xs hover:bg-amber-50 dark:hover:bg-amber-950/30 flex items-center gap-2 text-amber-700 dark:text-amber-400 font-medium transition"
+                        className="w-full px-4 py-2 text-left text-xs hover:bg-[#13382C] flex items-center gap-2 text-[#E4B865] font-medium transition-colors cursor-pointer"
                       >
-                        <Shield className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                        <Shield className="w-3.5 h-3.5 text-[#E4B865]" />
                         <span>Ranger Admin Desk</span>
                       </button>
                     )}
                   </div>
 
-                  <div className="border-t border-stone-100 dark:border-stone-800 pt-1">
+                  <div className="border-t border-[#1D4235] pt-1">
                     <button
-                      onClick={() => { logout(); setUserMenuOpen(false); }}
-                      className="w-full px-4 py-2 text-left text-xs hover:bg-red-50 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center gap-2 transition"
+                      type="button"
+                      onClick={() => {
+                        logout();
+                        setUserMenuOpen(false);
+                      }}
+                      className="w-full px-4 py-2 text-left text-xs hover:bg-rose-950/50 text-rose-300 flex items-center gap-2 transition-colors cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Sign Out</span>
@@ -200,99 +257,131 @@ export default function Navbar({ activePage, setActivePage }) {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => openAuthModal('login')}
-                className="px-3.5 py-1.5 text-xs font-semibold text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white transition cursor-pointer"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => handleNavClick('explore')}
-                className="px-4 py-2 rounded-xl bg-[#0F2D24] dark:bg-emerald-600 hover:bg-[#163D31] dark:hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer"
-              >
-                Book Safari
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => openAuthModal('login')}
+              className="px-3 py-2 rounded-xl text-xs font-semibold text-[#D0E0D8] hover:text-white hover:bg-[#13382C] transition-colors cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A]"
+            >
+              Sign In
+            </button>
           )}
+
+          {/* Primary Action CTA: Field Brass Gold */}
+          <button
+            type="button"
+            onClick={() => handleNavClick('explore')}
+            className="px-4 py-2 rounded-xl bg-[#C99A4A] hover:bg-[#B88939] text-[#0D2922] text-xs font-bold inline-flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E4B865]"
+          >
+            <span>Book Safari</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        {/* Mobile Hamburger Button */}
-        <div className="flex md:hidden items-center gap-1">
+        {/* Mobile Controls */}
+        <div className="flex md:hidden items-center gap-1.5">
           <button
+            type="button"
             onClick={toggleDarkMode}
-            className="p-2 rounded-lg text-stone-600 dark:text-stone-300"
+            aria-label={darkMode ? 'Switch to Day Mode' : 'Switch to Night Safari Dark Mode'}
+            className="p-2 rounded-xl text-[#D0E0D8] hover:text-white hover:bg-[#13382C]"
           >
-            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            {darkMode ? (
+              <Sun className="w-4 h-4 text-[#E4B865]" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
           </button>
-          
+
           <button
+            type="button"
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg text-stone-700 dark:text-stone-200 hover:bg-stone-200/50 dark:hover:bg-stone-800/50"
+            className="p-2 rounded-xl text-[#F4EBDA] hover:bg-[#13382C]"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#FDFBF7] dark:bg-[#081512] border-b border-stone-200 dark:border-stone-800 px-4 py-4 space-y-1">
-          {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => handleNavClick(link.id)}
-              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium ${
-                activePage === link.id
-                  ? 'bg-emerald-900/10 text-emerald-900 dark:text-amber-400 font-bold'
-                  : 'text-stone-700 dark:text-stone-300'
-              }`}
-            >
-              {link.label}
-            </button>
-          ))}
+        <div className="md:hidden bg-[#081E17]/98 backdrop-blur-xl border-b border-[#265244] px-4 py-4 space-y-1">
+          {navLinks.map((link) => {
+            const isActive = activePage === link.id;
+            return (
+              <button
+                key={link.id}
+                type="button"
+                onClick={() => handleNavClick(link.id)}
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-[#13382C] text-[#E4B865] font-semibold'
+                    : 'text-[#D0E0D8] hover:bg-[#102E24] hover:text-white'
+                }`}
+              >
+                {link.label}
+              </button>
+            );
+          })}
 
-          <div className="border-t border-stone-200 dark:border-stone-800 pt-3 mt-2 space-y-2">
+          <div className="border-t border-[#1D4235] pt-3 mt-2 space-y-2">
             {isAuthenticated ? (
               <>
                 <button
+                  type="button"
                   onClick={() => handleNavClick('profile')}
-                  className="w-full flex items-center justify-between px-3 py-2 text-sm text-stone-800 dark:text-stone-200"
+                  className="w-full flex items-center justify-between px-3.5 py-2 text-sm text-[#F4EBDA]"
                 >
                   <span className="flex items-center gap-2">
-                    <Ticket className="w-4 h-4 text-emerald-600" /> My Gate Passes
+                    <Ticket className="w-4 h-4 text-[#E4B865]" />
+                    <span>My Gate Passes</span>
                   </span>
-                  <span className="text-xs font-bold px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 rounded">
+                  <span className="text-xs font-mono tabular-nums font-bold text-[#E4B865]">
                     {bookings.length}
                   </span>
                 </button>
                 {isAdmin && (
                   <button
+                    type="button"
                     onClick={() => handleNavClick('admin')}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-amber-600 dark:text-amber-400 font-medium"
+                    className="w-full flex items-center gap-2 px-3.5 py-2 text-sm text-[#E4B865] font-medium"
                   >
-                    <Shield className="w-4 h-4" /> Ranger Admin Portal
+                    <Shield className="w-4 h-4" />
+                    <span>Ranger Admin Desk</span>
                   </button>
                 )}
                 <button
-                  onClick={() => { logout(); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400"
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-2 px-3.5 py-2 text-sm text-rose-300"
                 >
-                  <LogOut className="w-4 h-4" /> Sign Out ({user.name})
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out ({user.name})</span>
                 </button>
               </>
             ) : (
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <button
-                  onClick={() => { openAuthModal('login'); setMobileMenuOpen(false); }}
-                  className="py-2.5 px-3 border border-stone-300 dark:border-stone-700 text-stone-800 dark:text-stone-200 font-semibold text-xs rounded-xl text-center"
+                  type="button"
+                  onClick={() => {
+                    openAuthModal('login');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="py-2.5 px-3 border border-[#2B5D4B] text-[#F4EBDA] font-semibold text-xs rounded-xl text-center"
                 >
                   Sign In
                 </button>
                 <button
-                  onClick={() => { handleNavClick('explore'); setMobileMenuOpen(false); }}
-                  className="py-2.5 px-3 bg-[#0F2D24] dark:bg-emerald-600 text-white font-semibold text-xs rounded-xl text-center"
+                  type="button"
+                  onClick={() => {
+                    handleNavClick('explore');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="py-2.5 px-3 bg-[#C99A4A] text-[#0D2922] font-bold text-xs rounded-xl text-center"
                 >
                   Book Safari
                 </button>

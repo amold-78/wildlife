@@ -40,7 +40,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleBookingCompleted = (bookingId) => {
+  const handleBookingCompleted = (_bookingId) => {
     setActivePage('profile'); // Send directly to profile gate pass page on complete!
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -48,7 +48,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BookingProvider>
-        <div className="min-h-screen flex flex-col bg-[#F8F7F2] dark:bg-[#071713] text-[#202724] dark:text-[#E2ECE6] transition-colors">
+        <div className="min-h-screen flex flex-col bg-[#F5EFE6] dark:bg-[#071713] text-[#14261F] dark:text-[#F0ECE1] transition-colors">
           
           {/* Navigation Bar */}
           <Navbar
@@ -126,7 +126,7 @@ export default function App() {
           </main>
 
           {/* Global Footer */}
-          <Footer onNavigate={navigateTo} />
+          <Footer onNavigate={navigateTo} onSelectSafari={handleSelectSafari} />
 
           {/* Global Floating Ranger AI Naturalist Drawer */}
           <AskRangerModal

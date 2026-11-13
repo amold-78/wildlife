@@ -27,12 +27,12 @@ export const SAFARIS = [
       { name: "Khutwanda Zone", entryGate: "Khutwanda Gate", status: "Core Sighting", permitsPerShift: 8 }
     ],
     wildlifeProbabilities: [
-      { animal: "Royal Bengal Tiger", probability: "Very High (88%)", level: "high", icon: "🐅" },
-      { animal: "Indian Leopard", probability: "Moderate (55%)", level: "med", icon: "🐆" },
-      { animal: "Sloth Bear", probability: "High (70%)", level: "high", icon: "🐻" },
-      { animal: "Indian Gaur (Bison)", probability: "Very High (95%)", level: "high", icon: "🐂" },
-      { animal: "Marsh Crocodile", probability: "High (75%)", level: "high", icon: "🐊" },
-      { animal: "Dhole (Wild Dog)", probability: "Moderate (42%)", level: "med", icon: "🐕" }
+      { animal: "Royal Bengal Tiger", probability: "Very High (88%)", level: "high" },
+      { animal: "Indian Leopard", probability: "Moderate (55%)", level: "med" },
+      { animal: "Sloth Bear", probability: "High (70%)", level: "high" },
+      { animal: "Indian Gaur (Bison)", probability: "Very High (95%)", level: "high" },
+      { animal: "Marsh Crocodile", probability: "High (75%)", level: "high" },
+      { animal: "Dhole (Wild Dog)", probability: "Moderate (42%)", level: "med" }
     ],
     monthlySeason: [
       { month: "Oct", status: "excellent", label: "Lush & Open" },
@@ -119,11 +119,11 @@ export const SAFARIS = [
       { name: "Jamtara Gate", entryGate: "Jamtara", status: "Low Congestion", permitsPerShift: 8 }
     ],
     wildlifeProbabilities: [
-      { animal: "Royal Bengal Tiger", probability: "High (74%)", level: "high", icon: "🐅" },
-      { animal: "Indian Leopard", probability: "High (65%)", level: "high", icon: "🐆" },
-      { animal: "Indian Wild Dog (Dhole)", probability: "High (68%)", level: "high", icon: "🐕" },
-      { animal: "Spotted Deer (Chital)", probability: "Abundant (98%)", level: "high", icon: "🦌" },
-      { animal: "Malabar Pied Hornbill", probability: "Very High (82%)", level: "high", icon: "🦜" }
+      { animal: "Royal Bengal Tiger", probability: "High (74%)", level: "high" },
+      { animal: "Indian Leopard", probability: "High (65%)", level: "high" },
+      { animal: "Indian Wild Dog (Dhole)", probability: "High (68%)", level: "high" },
+      { animal: "Spotted Deer (Chital)", probability: "Abundant (98%)", level: "high" },
+      { animal: "Malabar Pied Hornbill", probability: "Very High (82%)", level: "high" }
     ],
     monthlySeason: [
       { month: "Oct", status: "excellent", label: "Open & Green" },
@@ -197,11 +197,11 @@ export const SAFARIS = [
       { name: "Zone 6 to 10 (Buffer)", entryGate: "Kalyanpura / Balas", status: "Rugged Hills", permitsPerShift: 16 }
     ],
     wildlifeProbabilities: [
-      { animal: "Royal Bengal Tiger", probability: "Very High (82%)", level: "high", icon: "🐅" },
-      { animal: "Indian Leopard", probability: "Moderate (48%)", level: "med", icon: "🐆" },
-      { animal: "Marsh Crocodile", probability: "Very High (90%)", level: "high", icon: "🐊" },
-      { animal: "Sambar Deer", probability: "Abundant (95%)", level: "high", icon: "🦌" },
-      { animal: "Sloth Bear", probability: "Moderate (35%)", level: "med", icon: "🐻" }
+      { animal: "Royal Bengal Tiger", probability: "Very High (82%)", level: "high" },
+      { animal: "Indian Leopard", probability: "Moderate (48%)", level: "med" },
+      { animal: "Marsh Crocodile", probability: "Very High (90%)", level: "high" },
+      { animal: "Sambar Deer", probability: "Abundant (95%)", level: "high" },
+      { animal: "Sloth Bear", probability: "Moderate (35%)", level: "med" }
     ],
     monthlySeason: [
       { month: "Oct", status: "excellent", label: "Gates Reopen" },
@@ -279,18 +279,18 @@ export const SAFARIS = [
       "https://images.unsplash.com/photo-1549480017-d76466a4b7e8?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=1200&q=80"
     ],
-    overview: "Set in the majestic Shivalik and Himalayan foothills, Corbett offers unparalleled dramatic landscapes — dense Sal forests, grasslands (chaurs), and the azure Ramganga river. Famous for herds of wild Asian Elephants alongside Bengal Tigers.",
+    overview: "Set in the Shivalik and Himalayan foothills, Corbett spans dense Sal forests, wide grasslands (chaurs), and the Ramganga river valley. Known for herds of wild Asian Elephants alongside Bengal Tigers.",
     zones: [
       { name: "Dhikala Zone", entryGate: "Dhangarhi Gate", status: "Crown Jewel Grasslands", permitsPerShift: 15 },
       { name: "Bijrani Zone", entryGate: "Amdanda Gate", status: "Prime Tiger Territory", permitsPerShift: 12 },
       { name: "Jhirna Zone", entryGate: "Jhirna Gate", status: "Open Year Round", permitsPerShift: 10 }
     ],
     wildlifeProbabilities: [
-      { animal: "Asian Elephant Herds", probability: "Abundant (92%)", level: "high", icon: "🐘" },
-      { animal: "Royal Bengal Tiger", probability: "High (65%)", level: "high", icon: "🐅" },
-      { animal: "Gharial (Fish-eating Croc)", probability: "High (75%)", level: "high", icon: "🐊" },
-      { animal: "Himalayan Black Bear", probability: "Rare (15%)", level: "low", icon: "🐻" },
-      { animal: "King Cobra", probability: "Moderate (28%)", level: "med", icon: "🐍" }
+      { animal: "Asian Elephant Herds", probability: "Abundant (92%)", level: "high" },
+      { animal: "Royal Bengal Tiger", probability: "High (65%)", level: "high" },
+      { animal: "Gharial (Fish-eating Croc)", probability: "High (75%)", level: "high" },
+      { animal: "Himalayan Black Bear", probability: "Rare (15%)", level: "low" },
+      { animal: "King Cobra", probability: "Moderate (28%)", level: "med" }
     ],
     monthlySeason: [
       { month: "Oct", status: "limited", label: "Select Zones Only" },
@@ -364,11 +364,11 @@ export const SAFARIS = [
       { name: "Mukki Zone", entryGate: "Mukki Gate", status: "Meadow Panoramic", permitsPerShift: 12 }
     ],
     wildlifeProbabilities: [
-      { animal: "Royal Bengal Tiger", probability: "High (78%)", level: "high", icon: "🐅" },
-      { animal: "Hard-ground Barasingha", probability: "Abundant (96%)", level: "high", icon: "🦌" },
-      { animal: "Indian Gaur (Bison)", probability: "Very High (90%)", level: "high", icon: "🐂" },
-      { animal: "Indian Leopard", probability: "Moderate (52%)", level: "med", icon: "🐆" },
-      { animal: "Dhole Pack", probability: "High (62%)", level: "high", icon: "🐕" }
+      { animal: "Royal Bengal Tiger", probability: "High (78%)", level: "high" },
+      { animal: "Hard-ground Barasingha", probability: "Abundant (96%)", level: "high" },
+      { animal: "Indian Gaur (Bison)", probability: "Very High (90%)", level: "high" },
+      { animal: "Indian Leopard", probability: "Moderate (52%)", level: "med" },
+      { animal: "Dhole Pack", probability: "High (62%)", level: "high" }
     ],
     monthlySeason: [
       { month: "Oct", status: "excellent", label: "Vibrant Greens" },
@@ -441,11 +441,11 @@ export const SAFARIS = [
       { name: "Agoratoli (Eastern) Range", entryGate: "Agoratoli Gate", status: "Birding Paradise", permitsPerShift: 10 }
     ],
     wildlifeProbabilities: [
-      { animal: "Great One-horned Rhino", probability: "Guaranteed (99%)", level: "high", icon: "🦏" },
-      { animal: "Wild Water Buffalo", probability: "Abundant (94%)", level: "high", icon: "🐃" },
-      { animal: "Asian Elephant", probability: "Very High (88%)", level: "high", icon: "🐘" },
-      { animal: "Royal Bengal Tiger", probability: "Moderate (42%)", level: "med", icon: "🐅" },
-      { animal: "Eastern Swamp Deer", probability: "High (80%)", level: "high", icon: "🦌" }
+      { animal: "Great One-horned Rhino", probability: "Guaranteed (99%)", level: "high" },
+      { animal: "Wild Water Buffalo", probability: "Abundant (94%)", level: "high" },
+      { animal: "Asian Elephant", probability: "Very High (88%)", level: "high" },
+      { animal: "Royal Bengal Tiger", probability: "Moderate (42%)", level: "med" },
+      { animal: "Eastern Swamp Deer", probability: "High (80%)", level: "high" }
     ],
     monthlySeason: [
       { month: "Oct", status: "limited", label: "Partial Access" },

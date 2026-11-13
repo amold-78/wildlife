@@ -21,7 +21,7 @@ function getStoredUsers() {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.USERS);
     if (data) return JSON.parse(data);
-  } catch (e) {}
+  } catch {}
 
   const defaultUsers = [
     {
@@ -51,7 +51,7 @@ function getStoredBookings() {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.BOOKINGS);
     if (data) return JSON.parse(data);
-  } catch (e) {}
+  } catch {}
 
   const defaultBookings = [
     {
@@ -98,7 +98,7 @@ function getStoredBookings() {
       itinerary: [
         { time: '05:00 AM', title: 'Report to Moharli Gate', desc: 'Arrive 45 mins prior with physical original photo IDs.' },
         { time: '05:30 AM', title: 'Permit Authorization', desc: 'Permit slip verified by Forest Department staff.' },
-        { time: '06:00 AM', title: 'Expedition Commences 🐅', desc: 'Enter Moharli Zone with assigned driver and certified naturalist.' },
+        { time: '06:00 AM', title: 'Expedition Commences', desc: 'Enter Moharli Zone with assigned driver and certified naturalist.' },
         { time: '09:30 AM', title: 'Return to Gate', desc: 'Debrief and sighting log entry.' }
       ]
     }
@@ -114,7 +114,7 @@ const delay = (ms = 30) => new Promise(res => setTimeout(res, ms));
 export const api = {
   // Authentication & Profile Endpoints
   auth: {
-    login: async ({ email, password }) => {
+    login: async ({ email, password: _password }) => {
       await delay();
       const users = getStoredUsers();
       const normEmail = (email || '').trim().toLowerCase();
@@ -300,7 +300,7 @@ export const api = {
         itinerary: [
           { time: '05:00 AM', title: `Report to ${bookingData.entryGate || 'Main Gate'}`, desc: 'Arrive 45 mins prior with physical original photo IDs.' },
           { time: '05:30 AM', title: 'Permit Authorization', desc: 'Permit slip verified by Forest Department staff.' },
-          { time: '06:00 AM', title: 'Expedition Commences 🐅', desc: `Enter ${bookingData.zoneName || 'Core Zone'} with assigned driver and certified naturalist.` },
+          { time: '06:00 AM', title: 'Expedition Commences', desc: `Enter ${bookingData.zoneName || 'Core Zone'} with assigned driver and certified naturalist.` },
           { time: '09:30 AM', title: 'Return to Gate', desc: 'Debrief and sighting log entry.' }
         ]
       };
@@ -356,7 +356,7 @@ export const api = {
         if (stored) {
           return { success: true, reviews: JSON.parse(stored) };
         }
-      } catch (e) {}
+      } catch {}
 
       const initial = DEFAULT_REVIEWS[safariId] || DEFAULT_REVIEWS['tadoba-national-park'] || [];
       return {
@@ -372,7 +372,7 @@ export const api = {
       try {
         const stored = localStorage.getItem(key);
         current = stored ? JSON.parse(stored) : (DEFAULT_REVIEWS[safariId] || []);
-      } catch (e) {}
+      } catch {}
 
       const newReview = {
         id: `rev-${Date.now()}`,
@@ -396,7 +396,7 @@ export const api = {
       };
     },
 
-    voteHelpful: async (id) => {
+    voteHelpful: async (_id) => {
       await delay();
       return {
         success: true,

@@ -10,7 +10,7 @@ export const DEFAULT_REVIEWS = {
       shift: "Dawn Core Safari",
       wildlifeSpotted: ["Royal Bengal Tiger", "Sloth Bear", "Marsh Crocodile"],
       title: "Unforgettable 45-minute sighting near Telia Lake!",
-      content: "Tadoba completely blew away our expectations. Our forest department naturalist Anand was extraordinarily skilled at reading cheetal alarm calls. Within 40 minutes of entering Moharli Gate, we tracked Maya the tigress walking right along the fireline for nearly half a kilometer. The Gypsy shock absorbers made telephoto shooting effortless.",
+      content: "Tadoba exceeded our expectations. Our forest department naturalist Anand was skilled at reading chital alarm calls. Within 40 minutes of entering Moharli Gate, we tracked Maya the tigress walking along the fireline for nearly half a kilometer. The Gypsy leaf-spring suspension kept our telephoto frames steady.",
       helpfulCount: 34,
       verified: true
     },
@@ -23,8 +23,8 @@ export const DEFAULT_REVIEWS = {
       zone: "Kolara Gate Core",
       shift: "Golden Hour Safari",
       wildlifeSpotted: ["Royal Bengal Tiger", "Indian Gaur", "Spotted Deer"],
-      title: "Flawless gate check-in and surreal evening light",
-      content: "Booking through WildTrail made the gate paperwork zero stress. We arrived at Kolara gate with our digital pass, and the guards verified our original Aadhaar IDs in 2 minutes. We encountered a huge male tiger drinking at a saucer pond just as the golden afternoon light hit the teak canopies.",
+      title: "Fast gate check-in and clear evening light",
+      content: "Booking through WildTrail made the gate paperwork straightforward. We arrived at Kolara gate with our digital pass, and the guards verified our original Aadhaar IDs in 2 minutes. We encountered a male tiger drinking at a saucer pond just as the afternoon light hit the teak canopies.",
       helpfulCount: 19,
       verified: true
     },
@@ -37,8 +37,8 @@ export const DEFAULT_REVIEWS = {
       zone: "Navegaon Buffer",
       shift: "Dawn Safari",
       wildlifeSpotted: ["Indian Leopard", "Dhole Pack", "Malabar Pied Hornbill"],
-      title: "Buffer zone was surprisingly packed with action!",
-      content: "Core permits were fully booked for our dates, so we took Navegaon buffer. To our surprise, we saw a pack of 7 Asiatic wild dogs (dholes) stalking chital, followed by a leopard on a rocky ridge. Dress warmly in January—open gypsies at 6 AM are bone-chilling!",
+      title: "Buffer zone was active with wild dogs and leopard",
+      content: "Core permits were fully booked for our dates, so we took Navegaon buffer. To our surprise, we saw a pack of 7 Asiatic wild dogs (dholes) stalking chital, followed by a leopard on a rocky ridge. Dress warmly in January: open gypsies at 6 AM are bone-chilling!",
       helpfulCount: 12,
       verified: true
     }

@@ -138,7 +138,7 @@ export function BookingProvider({ children }) {
       const updated = [newBooking, ...prev];
       try {
         localStorage.setItem('wildtrail_bookings', JSON.stringify(updated));
-      } catch (e) {}
+      } catch {}
       return updated;
     });
 
@@ -173,7 +173,7 @@ export function BookingProvider({ children }) {
       const updated = prev.filter(b => b.id !== bookingId);
       try {
         localStorage.setItem('wildtrail_bookings', JSON.stringify(updated));
-      } catch (e) {}
+      } catch {}
       return updated;
     });
     showToast(`Booking ${bookingId} has been cancelled.`, "info");

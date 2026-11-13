@@ -30,7 +30,7 @@ Male tiger pugmarks are distinctly square, with circular toe pads that fit withi
 
 1. The Langur Treetop Lookout: Northern Plains Gray Langurs position themselves on high Sal branches. When a tiger slinks through tall grass, langurs unleash a sharp, explosive 'Khok-khok-khok!' cough. Because they track the tiger from above, following the direction of their gaze tells you the exact vector of the predator's march.
 
-2. The Sambar Deer Death Gong: The Sambar produces the most resonant alarm in the Indian wild — a deep, metallic, hollow horn-like blast ('Dhhonk!'). When a Sambar calls repeatedly with its tail held vertically and forehoof stomping the dirt, the tiger is on the hunt and actively stalking.
+2. The Sambar Deer Death Gong: The Sambar produces the most resonant alarm in the Indian wild, a deep, metallic, hollow horn-like blast ('Dhhonk!'). When a Sambar calls repeatedly with its tail held vertically and forehoof stomping the dirt, the tiger is on the hunt and actively stalking.
 
 3. The Chital Staccato: Spotted deer make high-pitched, rapid chirps. When 20 deer suddenly freeze, ears pivoted forward, their synchronized silence is often more telling than the calls themselves.`
       },
@@ -62,7 +62,7 @@ If you pass a bend in the road and suddenly catch a strong, musky, popcorn-like 
     publishDate: "October 2026",
     coverImage: "https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=1200&q=80",
     tags: ["Safari Zones", "Permit Quotas", "NTCA Rules", "Buffer Zones", "Travel Planning"],
-    excerpt: "Missed out on core zone permits? Don't despair. Here is why modern buffer corridors often have equal — and sometimes superior — wildlife encounters with zero tourist crowds.",
+    excerpt: "Missed out on core zone permits? Don't despair. Here is why modern buffer corridors often have equal, and sometimes higher, wildlife encounter rates with far fewer vehicles.",
     sections: [
       {
         heading: "The Historical Division: Core vs. Buffer",
@@ -164,7 +164,7 @@ During the monsoon, when the Brahmaputra River overflows and submerges up to 80%
       },
       {
         heading: "The Numbers Today",
-        content: `The 2022 census officially counted 2,613 Greater One-Horned Rhinos in Kaziranga alone — representing two-thirds of the entire global population. Armed anti-poaching squads, thermal drone surveillance, and community benefit-sharing have driven poaching down to zero across multiple consecutive years.
+        content: `The 2022 census officially counted 2,613 Greater One-Horned Rhinos in Kaziranga alone, representing two-thirds of the entire global population. Armed anti-poaching squads, thermal drone surveillance, and community benefit-sharing have driven poaching down to zero across multiple consecutive years.
 
 When you sit in an open safari jeep along the Bagori or Kohora range and watch a 2-tonne armored giant peacefully grazing just ten paces away, you are witnessing living proof that human resolve can overcome extinction.`
       }
@@ -194,7 +194,7 @@ When you sit in an open safari jeep along the Bagori or Kohora range and watch a
     sections: [
       {
         heading: "The Termite Vacuum Machine",
-        content: `Unlike brown or black bears, sloth bears have evolved specifically for 'myrmecophagy' — feeding almost exclusively on colonial insects like termites and ants.
+        content: `Unlike brown or black bears, sloth bears have evolved specifically for 'myrmecophagy': feeding almost exclusively on colonial insects like termites and ants.
 
 To achieve this, evolutionary biology stripped the sloth bear of its upper two front incisors, creating an unobstructed straw-like passage. When a bear tears into a rock-hard termite mound with its 4-inch curved ivory claws, it closes its nostrils at will and inhales deeply. The resulting vacuum suction makes a loud, vibrating whistling noise audible over 100 meters through the dry forest.`
       },
@@ -232,11 +232,11 @@ During this season, mothers frequently venture into open forest clearings with t
         heading: "The 1973 Genesis",
         content: `By the late 1960s, rampant colonial shikar hunting, habitat fragmentation, and poisoning had reduced India's wild tiger population from an estimated 40,000 at the turn of the century to fewer than 1,800.
 
-Launched on April 1, 1973, in Jim Corbett National Park under Prime Minister Indira Gandhi, Project Tiger changed conservation philosophy forever. It recognized that saving the tiger meant protecting the entire forest ecosystem — the rivers, the Sal canopies, the herbivore ungulates, and the catchment basins that provide fresh water to millions of citizens downstream.`
+Launched on April 1, 1973, in Jim Corbett National Park under Prime Minister Indira Gandhi, Project Tiger changed conservation philosophy forever. It recognized that saving the tiger meant protecting the entire forest ecosystem: the rivers, the Sal canopies, the herbivore ungulates, and the catchment basins that provide fresh water to millions of citizens downstream.`
       },
       {
         heading: "From 9 to 55 Reserves",
-        content: `What began with just 9 initial reserves covering 9,115 sq km has expanded today to 55 tiger reserves spanning over 75,000 sq km — exceeding 2.2% of India's entire geographical landmass.
+        content: `What began with just 9 initial reserves covering 9,115 sq km has expanded today to 55 tiger reserves spanning over 75,000 sq km, exceeding 2.2% of India's entire geographical landmass.
 
 The most recent national quadrennial census documented over 3,682 wild tigers. India achieved the global 'Tx2' goal (doubling wild tiger numbers) four full years ahead of the St. Petersburg Declaration deadline.`
       },

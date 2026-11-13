@@ -12,7 +12,7 @@ export function calculateSafariMatch(safari, preferences) {
   const {
     wildlife = "tiger",
     budget = 6000,
-    timeframe = "next-month",
+    timeframe: _timeframe = "next-month",
     party = "family",
     region = "any"
   } = preferences;
@@ -96,7 +96,7 @@ export function calculateSafariMatch(safari, preferences) {
     reasons.push("Healthy slot availability for upcoming dates");
   } else {
     score += 6;
-    reasons.push("Limited inventory remaining — early reservation recommended");
+    reasons.push("Limited inventory remaining: early reservation recommended");
   }
 
   // Cap between 68% and 98% for realistic feel

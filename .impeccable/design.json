@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T08:12:00Z",
+  "title": "Design System: WildTrail",
+  "extensions": {
+    "colorMeta": {
+      "forest-deep": {
+        "role": "primary",
+        "displayName": "Deep Canopy Forest",
+        "canonical": "#0D2922",
+        "tonalRamp": ["#040E0B", "#081713", "#0D2922", "#173F35", "#245B4D", "#4A8575", "#8BB8AA", "#E2ECE6"]
+      },
+      "field-gold": {
+        "role": "primary",
+        "displayName": "Field Brass Gold",
+        "canonical": "#C99A4A",
+        "tonalRamp": ["#3D2B0D", "#664918", "#916A27", "#B88939", "#C99A4A", "#DFB56C", "#EED3A1", "#FAF0DC"]
+      },
+      "campfire-ember": {
+        "role": "secondary",
+        "displayName": "Campfire Ember",
+        "canonical": "#E58C3A",
+        "tonalRamp": ["#452307", "#733D0E", "#A65A18", "#D17424", "#E58C3A", "#F0AA67", "#F7CCA1", "#FDF0E2"]
+      },
+      "river-teal": {
+        "role": "secondary",
+        "displayName": "Ramganga River Teal",
+        "canonical": "#2B6964",
+        "tonalRamp": ["#0B2321", "#143A37", "#1F524E", "#2B6964", "#448A84", "#6DB2AC", "#A4D5D1", "#E5F6F5"]
+      },
+      "morning-parchment": {
+        "role": "neutral",
+        "displayName": "Morning Parchment",
+        "canonical": "#F8F7F2",
+        "tonalRamp": ["#202724", "#4A524D", "#78807A", "#A8ACA6", "#D4D2C7", "#E9DFC9", "#F4EFE4", "#F8F7F2"]
+      },
+      "night-canvas": {
+        "role": "neutral",
+        "displayName": "Night Camp Obsidian",
+        "canonical": "#071713",
+        "tonalRamp": ["#040C0A", "#071713", "#0C211B", "#143329", "#245042", "#477A6A", "#8EB4A7", "#E2ECE6"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display Serif",
+        "purpose": "Hero expedition statement above the search console."
+      },
+      "headline": {
+        "displayName": "Section Serif",
+        "purpose": "Major night-camp and conservation code headings."
+      },
+      "title": {
+        "displayName": "Reserve Title",
+        "purpose": "Park and reserve headings inside Field Journal checkpoint cards."
+      },
+      "body": {
+        "displayName": "Editorial Sans",
+        "purpose": "Reserve summaries, wildlife breakdowns, and permit guidance."
+      },
+      "label": {
+        "displayName": "Tabular Telemetry Mono",
+        "purpose": "GPS coordinates, meter elevations, bearings, and probability percentages."
+      }
+    },
+    "shadows": [
+      {
+        "name": "single-elevation-blur",
+        "value": "none (1px solid border + backdrop-filter: blur(12px))",
+        "purpose": "Clean glassmorphic Field Journal separation over parallax terrain without stacked shadows."
+      }
+    ],
+    "motion": [
+      {
+        "name": "lenis-inertial-lerp",
+        "value": "0.085 lerp",
+        "purpose": "Buttery scroll smoothing synced to GSAP ticker."
+      },
+      {
+        "name": "gsap-motionpath-scrub",
+        "value": "0.55s scrub with autoRotate: true",
+        "purpose": "Locks 4x4 safari Jeep coordinates and rotation strictly to the S-curve SVG trail."
+      },
+      {
+        "name": "card-deck-flip",
+        "value": "520ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "2.5D layered photo deck slide-peel transition inside Field Journal checkpoint cards."
+      },
+      {
+        "name": "euclidean-wildlife-proximity",
+        "value": "60fps requestAnimationFrame Euclidean distance state machine",
+        "purpose": "Drives 3-state (idle -> alert -> settle) articulated SVG wildlife reactions around trail bends."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Explore Reserve Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary Brass Gold CTA inside Field Journal checkpoints and Safari Finder triggers.",
+      "html": "<button class=\"ds-btn-primary\"><span>Explore Reserve</span><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 6px; background: #C99A4A; color: #0D2922; font-family: 'Source Sans 3', sans-serif; font-size: 12px; font-weight: 700; padding: 10px 16px; border: none; border-radius: 12px; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; } .ds-btn-primary:hover { background: #B88939; } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid #C99A4A; outline-offset: 2px; }"
+    },
+    {
+      "name": "Explore Safaris Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Hero permit search submit control in Deep Canopy Forest.",
+      "html": "<button class=\"ds-btn-secondary\"><span>Explore Safaris</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#C99A4A\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 20px; background: #0D2922; color: #FFFFFF; font-family: 'Source Sans 3', sans-serif; font-size: 14px; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; transition: background 0.15s ease; } .ds-btn-secondary:hover { background: #173F35; } .ds-btn-secondary:focus-visible { outline: 2px solid #C99A4A; outline-offset: 2px; }"
+    },
+    {
+      "name": "Field Journal Checkpoint Card",
+      "kind": "card",
+      "refersTo": "field-journal-card",
+      "description": "Glassmorphic trailside checkpoint card with 16:10 4-photo flip deck, live wildlife sighting telemetry, and permit fare.",
+      "html": "<article class=\"ds-journal-card\"><div class=\"ds-journal-meta\"><span>20.2285° N, 79.3586° E</span><span class=\"ds-elev\">285 m</span></div><div class=\"ds-journal-body\"><h3>Tadoba Andhari Tiger Reserve</h3><p>Maharashtra · Telia Lake Dawn</p><div class=\"ds-journal-foot\"><strong>₹2,499 <span>/ guest</span></strong><button class=\"ds-btn-primary\">Explore Reserve</button></div></div></article>",
+      "css": ".ds-journal-card { background: rgba(250, 246, 236, 0.92); color: #142922; border: 1px solid #D8C9AA; border-radius: 16px; backdrop-filter: blur(12px); overflow: hidden; max-width: 440px; font-family: 'Source Sans 3', sans-serif; } .ds-journal-meta { padding: 10px 16px; border-bottom: 1px solid #E6DAC1; display: flex; justify-content: space-between; font-family: ui-monospace, monospace; font-size: 12px; color: #4B5B53; } .ds-elev { color: #C99A4A; font-weight: 600; } .ds-journal-body { padding: 16px; } .ds-journal-body h3 { margin: 0 0 4px; font-family: 'Playfair Display', Georgia, serif; font-size: 20px; color: #0D2922; } .ds-journal-body p { margin: 0 0 14px; font-size: 12px; color: #4B5B53; } .ds-journal-foot { padding-top: 12px; border-top: 1px solid #E6DAC1; display: flex; align-items: center; justify-content: space-between; gap: 12px; } .ds-journal-foot strong { font-size: 17px; color: #0D2922; } .ds-journal-foot span { font-size: 12px; font-weight: 400; color: #4B5B53; } .ds-btn-primary { background: #C99A4A; color: #0D2922; border: none; border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }"
+    },
+    {
+      "name": "Trail Compass HUD",
+      "kind": "custom",
+      "refersTo": "compass-hud",
+      "description": "Collapsible bottom-left expedition instrument showing live bearing, elevation, and trail completion.",
+      "html": "<div class=\"ds-compass-hud\"><div class=\"ds-compass-dial\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"9\" fill=\"none\" stroke=\"#E9DFC9\" stroke-opacity=\"0.35\"/><polygon points=\"12,3 14.5,12 12,10 9.5,12\" fill=\"#C99A4A\"/><polygon points=\"12,21 14.5,12 12,14 9.5,12\" fill=\"#6D9485\"/></svg></div><div><div class=\"ds-hud-title\">Ranthambore</div><div class=\"ds-hud-sub\">365 m · 38%</div></div></div>",
+      "css": ".ds-compass-hud { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; background: rgba(11, 32, 26, 0.92); color: #F3EDE0; border: 1px solid #285748; border-radius: 12px; font-family: 'Source Sans 3', sans-serif; } .ds-compass-dial { width: 32px; height: 32px; border-radius: 9999px; background: #133329; border: 1px solid rgba(201, 154, 74, 0.5); display: flex; align-items: center; justify-content: center; } .ds-hud-title { font-size: 12px; font-weight: 600; color: #FFFFFF; } .ds-hud-sub { font-size: 11px; font-family: ui-monospace, monospace; color: #C99A4A; }"
+    },
+    {
+      "name": "Expedition Search Input",
+      "kind": "input",
+      "description": "Date and reserve selector field inside the floating hero permit bar.",
+      "html": "<div class=\"ds-field-group\"><label>Expedition Date</label><input type=\"date\" value=\"2026-10-18\" /></div>",
+      "css": ".ds-field-group { display: inline-flex; flex-direction: column; gap: 4px; padding: 10px 14px; background: #FFFFFF; border: 1px solid #E9DFC9; border-radius: 12px; font-family: 'Source Sans 3', sans-serif; } .ds-field-group label { font-size: 11px; font-weight: 600; color: #C99A4A; } .ds-field-group input { border: none; background: transparent; font-size: 14px; font-weight: 600; color: #202724; outline: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Cartographic Canopy Expedition",
+    "overview": "WildTrail blends editorial wildlife publishing with tactile reserve cartography. Rather than trapping parks inside repetitive boxed grids, the system follows the natural progression of a single day inside an Indian tiger reserve: golden-hour morning mist over laterite forest tracks (#FAF6EC and #EFE3CA), shaded Sal-forest corridors and river crossings (#DCE7DF and #2B6964), and fire-lit twilight base camps (#071713 warmed by #E58C3A).\n\nEvery interface surface balances crisp typographic warmth with disciplined field telemetry. Serif display headings honor heritage field journals, sans-serif body text keeps permit rules effortlessly scannable, and monospace tabular coordinates turn reserve elevations and sighting probabilities into credible expedition data.",
+    "keyCharacteristics": [
+      "Continuous atmospheric progression from Dawn Mist to Emerald Canopy to Fire-Lit Night Camp.",
+      "Tactile cartographic hierarchy pairing vector contours and laterite road geometry with restrained glassmorphic journals.",
+      "Strictly calibrated day (#F8F7F2) and Night Safari (#071713) polarity without sacrificing contrast (>= 4.5:1)."
+    ],
+    "rules": [
+      {
+        "name": "The Brass Restraint Rule",
+        "body": "Field Brass Gold (#C99A4A) marks decisive expedition CTAs, active GPS beacons, and numeric telemetry—never large multi-column card fills.",
+        "section": "colors"
+      },
+      {
+        "name": "The Atmospheric Polarity Rule",
+        "body": "Field Journal cards adopt warm parchment (#FAF6EC) during Dawn Mist and Midday Canopy stops, then transition cleanly to dark slate (#0C211B) under Night Camp firelight to preserve contrast.",
+        "section": "colors"
+      },
+      {
+        "name": "The Zero-Eyebrow Rule",
+        "body": "Headings open directly with Playfair Display titles; supporting GPS coordinates and meter elevations live in dedicated card metadata bars or alongside actions rather than stacked kickers above titles.",
+        "section": "typography"
+      },
+      {
+        "name": "The Single-Elevation Rule",
+        "body": "Interactive Field Journal cards and HUD controls use crisp 1px borders (#D8C9AA or #265244) paired with subtle backdrop blur—avoiding heavy competing drop-shadows on layered terrain.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep Field Journal coordinates, elevation, and INR prices formatted with tabular-nums and whitespace-nowrap.",
+      "Do preserve prefers-reduced-motion bypasses so Lenis inertia, suspension jitter, dust plumes, and foliage parallax disable cleanly when requested.",
+      "Do keep trailside bank markers (Ramganga Timber Bridge) offset from the roadbed so timber planks and Jeep splashes remain unobstructed."
+    ],
+    "donts": [
+      "Don't place numbered kickers, uppercase category eyebrows, or floating badges above Playfair Display headings.",
+      "Don't overlap bottom-left Compass HUD controls and bottom-right Ask Ranger triggers on narrow 390px mobile screens.",
+      "Don't write ResizeObserver-measured heights back onto an observed parent container."
+    ]
+  }
+}
