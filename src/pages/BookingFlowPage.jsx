@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SAFARIS } from '../data/safaris';
 import { useBooking } from '../context/BookingContext';
+import { useAuth } from '../context/AuthContext';
 import confetti from 'canvas-confetti';
 import {
   Calendar,
@@ -13,6 +14,7 @@ import {
 
 export default function BookingFlowPage({ safariId, initialSlot, onBookingCompleted, onCancel }) {
   const { addBooking } = useBooking();
+  const { user } = useAuth();
   const safari = SAFARIS.find((s) => s.id === safariId) || SAFARIS[0];
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -23,12 +25,24 @@ export default function BookingFlowPage({ safariId, initialSlot, onBookingComple
   const [children, setChildren] = useState(0);
 
   const [primaryTraveler, setPrimaryTraveler] = useState({
-    name: 'Sahil Verma',
-    email: 'sahil@wildtrail.dev',
-    phone: '+91 98765 43210',
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
     idType: 'Aadhaar Card',
-    idNumber: '4829-1920-5812',
+    idNumber: user?.id_proof_number || '',
   });
+
+  useEffect(() => {
+    if (user) {
+      setPrimaryTraveler((prev) => ({
+        name: prev.name || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+        idType: prev.idType || 'Aadhaar Card',
+        idNumber: prev.idNumber || user.id_proof_number || '',
+      }));
+    }
+  }, [user]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -375,44 +389,67 @@ export default function BookingFlowPage({ safariId, initialSlot, onBookingComple
 
               {/* Primary Guest Permit Details */}
               <div className="p-5 rounded-xl bg-white dark:bg-[#071713] border border-[#D8CEBE] dark:border-[#265244] space-y-4">
-                <h3 className="font-bold text-xs uppercase tracking-wider text-[#43564E] dark:text-[#E4B865] flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#C99A4A]" />
-                  <span>Lead Traveler Permit Identification</span>
-                </h3>
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <h3 className="font-bold text-xs uppercase tracking-wider text-[#43564E] dark:text-[#E4B865] flex items-center gap-1.5 font-mono">
+                    <ShieldCheck className="w-4 h-4 text-[#C99A4A]" />
+                    <span>Lead Traveler Permit Identification</span>
+                  </h3>
+                  {(!primaryTraveler.name || !primaryTraveler.idNumber) && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPrimaryTraveler({
+                          name: 'Sahil Verma',
+                          email: 'sahil@wildtrail.dev',
+                          phone: '+91 98765 43210',
+                          idType: 'Aadhaar Card',
+                          idNumber: '4829-1920-5812',
+                        })
+                      }
+                      className="text-xs text-[#C99A4A] hover:underline font-medium cursor-pointer"
+                    >
+                      Autofill Sample Traveler
+                    </button>
+                  )}
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1">
-                      Full Legal Name (as on ID)
+                    <label htmlFor="lead-full-name" className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1">
+                      Full Legal Name (as on ID) *
                     </label>
                     <input
+                      id="lead-full-name"
                       type="text"
+                      placeholder="e.g. Sahil Verma"
                       value={primaryTraveler.name}
                       onChange={(e) =>
                         setPrimaryTraveler({ ...primaryTraveler, name: e.target.value })
                       }
-                      className="w-full bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-xl px-3 py-2 text-xs font-semibold text-[#14261F] dark:text-[#F0ECE1] focus:outline-none focus:border-[#C99A4A]"
+                      className="w-full bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-xl px-3 py-2 text-xs font-semibold text-[#14261F] dark:text-[#F0ECE1] placeholder-[#8EA399] dark:placeholder-[#4E685D] focus:outline-none focus:border-[#C99A4A]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1">
-                      Mobile (for Forest SMS Pass)
+                    <label htmlFor="lead-phone" className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1">
+                      Mobile (for Forest SMS Pass) *
                     </label>
                     <input
+                      id="lead-phone"
                       type="text"
+                      placeholder="e.g. +91 98765 43210"
                       value={primaryTraveler.phone}
                       onChange={(e) =>
                         setPrimaryTraveler({ ...primaryTraveler, phone: e.target.value })
                       }
-                      className="w-full bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-xl px-3 py-2 text-xs font-mono font-semibold text-[#14261F] dark:text-[#F0ECE1] focus:outline-none focus:border-[#C99A4A]"
+                      className="w-full bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-xl px-3 py-2 text-xs font-mono font-semibold text-[#14261F] dark:text-[#F0ECE1] placeholder-[#8EA399] dark:placeholder-[#4E685D] focus:outline-none focus:border-[#C99A4A]"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1.5">
+                    <span className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1.5 font-mono">
                       Government Photo ID Document Type *
-                    </label>
+                    </span>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {['Aadhaar Card', 'Passport', 'Voter ID', 'Driving License'].map((type) => {
                         const isSelected = primaryTraveler.idType === type;
@@ -435,17 +472,19 @@ export default function BookingFlowPage({ safariId, initialSlot, onBookingComple
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1">
-                      ID Document Number
+                  <div className="sm:col-span-2">
+                    <label htmlFor="lead-id-number" className="block text-xs font-semibold text-[#43564E] dark:text-[#B8CEC4] mb-1">
+                      ID Document Number *
                     </label>
                     <input
+                      id="lead-id-number"
                       type="text"
+                      placeholder="e.g. 4829-1920-5812"
                       value={primaryTraveler.idNumber}
                       onChange={(e) =>
                         setPrimaryTraveler({ ...primaryTraveler, idNumber: e.target.value })
                       }
-                      className="w-full bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-xl px-3 py-2 text-xs font-mono font-semibold text-[#14261F] dark:text-[#F0ECE1] focus:outline-none focus:border-[#C99A4A]"
+                      className="w-full bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-xl px-3 py-2 text-xs font-mono font-semibold text-[#14261F] dark:text-[#F0ECE1] placeholder-[#8EA399] dark:placeholder-[#4E685D] focus:outline-none focus:border-[#C99A4A]"
                     />
                   </div>
                 </div>

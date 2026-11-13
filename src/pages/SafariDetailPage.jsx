@@ -21,7 +21,7 @@ import {
   Footprints,
   Sun,
   Lock,
-  Zap
+  Ticket
 } from 'lucide-react';
 import { DEFAULT_REVIEWS } from '../data/reviews';
 import { api } from '../services/api';
@@ -675,15 +675,15 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
             {/* 1. WRITE A REVIEW FORM (Simple, Clean & Guest-Friendly) */}
             <form
               onSubmit={handleReviewSubmit}
-              className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm space-y-4"
+              className="p-5 sm:p-6 rounded-2xl bg-[#0B221B] border border-[#265244] shadow-sm space-y-4"
             >
-              <div className="flex items-center justify-between pb-3 border-b border-stone-200 dark:border-stone-800">
+              <div className="flex items-center justify-between pb-3 border-b border-[#265244]">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                    <PenLine className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <h3 className="font-serif text-lg font-bold text-white flex items-center gap-2">
+                    <PenLine className="w-4 h-4 text-[#E4B865]" />
                     Write a Review
                   </h3>
-                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                  <p className="text-xs text-[#9AB3A8] mt-0.5">
                     Share your wildlife sightings, guide feedback, or tips with fellow travelers
                   </p>
                 </div>
@@ -691,25 +691,26 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
 
               {/* User Identity: Auto-detected if logged in, optional if guest */}
               {isAuthenticated ? (
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-xs font-medium text-emerald-800 dark:text-emerald-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Reviewing as <strong className="font-bold">{user.name}</strong> (Verified Account)</span>
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#113227] border border-[#265244] text-xs font-medium text-[#86EFAC]">
+                  <CheckCircle2 className="w-4 h-4 text-[#86EFAC] shrink-0" />
+                  <span>Reviewing as <strong className="font-bold text-white">{user.name}</strong> (Verified Account)</span>
                 </div>
               ) : (
                 <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-stone-600 dark:text-stone-300 mb-1">
+                    <label htmlFor="review-author-name" className="block text-xs font-medium text-[#9AB3A8] mb-1">
                       Your Name (Optional)
                     </label>
                     <input
+                      id="review-author-name"
                       type="text"
                       placeholder="e.g. Sahil Verma (or leave blank to post as Guest Explorer)"
                       value={newAuthor}
                       onChange={(e) => setNewAuthor(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs focus:outline-none focus:border-emerald-600 focus:bg-white dark:focus:bg-stone-900"
+                      className="w-full px-3 py-2 rounded-xl border border-[#265244] bg-[#071713] text-white text-xs placeholder-[#668579] focus:outline-none focus:border-[#C99A4A]"
                     />
                   </div>
-                  <span className="text-xs text-stone-400 sm:mt-5">
+                  <span className="text-xs text-[#9AB3A8] sm:mt-5 font-mono">
                     No login required to post a review.
                   </span>
                 </div>
@@ -717,31 +718,32 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
 
               {/* Rating Stars */}
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">
+                <span className="block text-xs font-semibold text-[#9AB3A8] mb-1.5 font-mono">
                   Your Rating
-                </label>
+                </span>
                 <div className="flex items-center gap-1.5">
                   {[1, 2, 3, 4, 5].map((val) => (
                     <button
                       key={val}
                       type="button"
+                      aria-label={`Rate ${val} star${val > 1 ? 's' : ''}`}
                       onClick={() => setNewRating(val)}
                       className="p-0.5 hover:scale-110 transition-transform cursor-pointer"
                     >
                       <Star
                         className={`w-6 h-6 ${
                           val <= newRating
-                            ? 'fill-amber-400 text-amber-400'
-                            : 'text-stone-300 dark:text-stone-600'
+                            ? 'fill-[#C99A4A] text-[#C99A4A]'
+                            : 'text-[#265244]'
                         }`}
                       />
                     </button>
                   ))}
-                  <span className="ml-2.5 text-xs font-medium text-stone-600 dark:text-stone-300">
-                    {newRating === 5 ? '5 Stars – Extraordinary' :
-                     newRating === 4 ? '4 Stars – Great Safari' :
-                     newRating === 3 ? '3 Stars – Average' :
-                     newRating === 2 ? '2 Stars – Below Expectations' : '1 Star – Disappointing'}
+                  <span className="ml-2.5 text-xs font-medium text-[#E4B865] font-mono">
+                    {newRating === 5 ? '5 Stars: Extraordinary' :
+                     newRating === 4 ? '4 Stars: Great Safari' :
+                     newRating === 3 ? '3 Stars: Average' :
+                     newRating === 2 ? '2 Stars: Below Expectations' : '1 Star: Disappointing'}
                   </span>
                 </div>
               </div>
@@ -749,29 +751,31 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
               {/* Review Title & Experience Text */}
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-stone-600 dark:text-stone-300 mb-1">
+                  <label htmlFor="review-title-input" className="block text-xs font-medium text-[#9AB3A8] mb-1">
                     Headline
                   </label>
                   <input
+                    id="review-title-input"
                     type="text"
                     placeholder="e.g. Unbelievable sighting near the waterhole!"
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:bg-white dark:focus:bg-stone-900"
+                    className="w-full px-3.5 py-2 bg-[#071713] border border-[#265244] rounded-xl text-xs text-white placeholder-[#668579] focus:outline-none focus:border-[#C99A4A]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-stone-600 dark:text-stone-300 mb-1">
+                  <label htmlFor="review-content-textarea" className="block text-xs font-medium text-[#9AB3A8] mb-1">
                     Your Review *
                   </label>
                   <textarea
+                    id="review-content-textarea"
                     required
                     rows={3}
                     placeholder="Tell other travelers about your wildlife sightings, guide experience, or useful tips..."
                     value={newContent}
                     onChange={(e) => setNewContent(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-emerald-600 focus:bg-white dark:focus:bg-stone-900 leading-relaxed"
+                    className="w-full px-3.5 py-2.5 bg-[#071713] border border-[#265244] rounded-xl text-xs text-white placeholder-[#668579] focus:outline-none focus:border-[#C99A4A] leading-relaxed"
                   />
                 </div>
               </div>
@@ -779,7 +783,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
               {/* Optional Zone & Submit Action */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                 <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                  <span className="text-stone-500 dark:text-[#A8C4B8] text-xs font-medium mr-1">Zone:</span>
+                  <span className="text-[#9AB3A8] text-xs font-mono mr-1">Zone:</span>
                   {safari.zones.map((z, idx) => {
                     const isSelected = newZone === z.name;
                     return (
@@ -789,8 +793,8 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                         onClick={() => setNewZone(z.name)}
                         className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer ${
                           isSelected
-                            ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-300 border-emerald-400 dark:border-emerald-600 shadow-xs'
-                            : 'bg-stone-50 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-stone-400'
+                            ? 'bg-[#C99A4A]/20 text-[#E4B865] border-[#C99A4A] shadow-xs'
+                            : 'bg-[#071713] text-[#9AB3A8] border-[#265244] hover:border-[#C99A4A]/50'
                         }`}
                       >
                         {z.name}
@@ -802,8 +806,8 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
                     onClick={() => setNewZone("Buffer Zone")}
                     className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer ${
                       newZone === "Buffer Zone"
-                        ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-300 border-emerald-400 dark:border-emerald-600 shadow-xs'
-                        : 'bg-stone-50 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-stone-400'
+                        ? 'bg-[#C99A4A]/20 text-[#E4B865] border-[#C99A4A] shadow-xs'
+                        : 'bg-[#071713] text-[#9AB3A8] border-[#265244] hover:border-[#C99A4A]/50'
                     }`}
                   >
                     Buffer Zone
@@ -812,7 +816,7 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
 
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-xs flex items-center justify-center gap-2 transition shadow-sm active:scale-95 cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#C99A4A] to-[#E4B865] hover:opacity-95 text-[#09211A] font-bold text-xs flex items-center justify-center gap-2 transition shadow-sm active:scale-95 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Submit Review</span>
@@ -1030,14 +1034,14 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
               <span>Proceed to Permit Booking</span>
             </button>
 
-            <div className="text-xs text-stone-500 dark:text-[#9AB3A8] space-y-1.5 pt-1">
+            <div className="text-xs text-[#9AB3A8] space-y-1.5 pt-1 text-center">
               <p className="flex items-center justify-center gap-1.5">
                 <Lock className="w-3.5 h-3.5 text-[#C99A4A]" />
-                <span>100% Guaranteed official forest department permit</span>
+                <span>Client-side demo permit flow · Official gate pass voucher generated for entry inspection</span>
               </p>
               <p className="flex items-center justify-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-[#C99A4A]" />
-                <span>Instant digital gate voucher &amp; SMS pass</span>
+                <Ticket className="w-3.5 h-3.5 text-[#C99A4A]" />
+                <span>Instant digital gate voucher with verified QR code</span>
               </p>
             </div>
 

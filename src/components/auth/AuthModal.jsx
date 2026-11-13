@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Lock, Mail, User, Eye, EyeOff, AlertCircle, Compass, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useBooking } from '../../context/BookingContext';
@@ -16,6 +16,18 @@ export default function AuthModal() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // Close on Escape key (R-26, R-32)
+  useEffect(() => {
+    if (!authModalOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeAuthModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [authModalOpen, closeAuthModal]);
 
   if (!authModalOpen) return null;
 
@@ -71,14 +83,19 @@ export default function AuthModal() {
       />
 
       {/* Expedition Field Journal Modal Card */}
-      <div className="relative w-full max-w-md bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-2xl shadow-[0_24px_60px_-15px_rgba(3,12,9,0.75)] overflow-hidden z-10 text-[#14261F] dark:text-[#F0ECE1] my-8 animate-fade-in">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-modal-title"
+        className="relative w-full max-w-md bg-[#FBF8F3] dark:bg-[#0B221B] border border-[#D8CEBE] dark:border-[#265244] rounded-2xl shadow-[0_24px_60px_-15px_rgba(3,12,9,0.75)] overflow-hidden z-10 text-[#14261F] dark:text-[#F0ECE1] my-8 animate-fade-in"
+      >
         {/* Top Canopy Header Banner */}
         <div className="bg-[#09211A] text-[#F4EBDA] px-6 py-5 border-b border-[#265244] flex items-start justify-between">
           <div>
             <span className="text-[11px] font-mono uppercase tracking-widest text-[#C99A4A] block mb-1">
               WildTrail Permit Registry
             </span>
-            <h2 className="text-xl font-bold font-serif text-[#F8F3E8]">
+            <h2 id="auth-modal-title" className="text-xl font-bold font-serif text-[#F8F3E8]">
               {authModalTab === 'login' ? 'Sign In to Expedition Desk' : 'Create Traveler Account'}
             </h2>
             <p className="text-xs text-[#B7CEC4] mt-1">

@@ -293,7 +293,7 @@ export default function MySafariPage({ onExploreMore }) {
                 Have questions about your gate reporting time?
               </p>
               <p>
-                Open the <strong className="text-[#B88428] dark:text-[#E4B865] font-bold">Ask Ranger</strong> field desk button in the bottom-right corner to consult our expedition naturalist.
+                Consult licensed forest naturalists at your entry gate, or check with official reserve desks for gate clearance instructions.
               </p>
             </div>
           </div>
