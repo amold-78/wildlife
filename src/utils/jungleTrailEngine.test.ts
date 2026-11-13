@@ -43,10 +43,20 @@ test('buildResponsiveSnakeTrail creates valid alternating desktop path and tight
     height: 4800,
     isMobile: true,
   });
-  // Mobile tightens curve along left lane and keeps all cards on the right
+  // Mobile and desktop road stays centered around 50% width
   for (const cp of mobile.checkpointCoords) {
-    assert.ok(cp.x <= 390 * 0.25, `Mobile curve x=${cp.x} stays in left corridor`);
+    assert.ok(
+      Math.abs(cp.x - 390 * 0.5) <= 15,
+      `Mobile road x=${cp.x} stays centered around 50% width`,
+    );
     assert.equal(cp.cardSide, 'right');
+  }
+
+  for (const cp of desktop.checkpointCoords) {
+    assert.ok(
+      Math.abs(cp.x - 1440 * 0.5) <= 45,
+      `Desktop road x=${cp.x} stays in center corridor around 50% width`,
+    );
   }
 });
 

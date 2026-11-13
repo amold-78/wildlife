@@ -127,9 +127,20 @@ export function useJeepProximity(
         );
       }
 
-      // Sync discrete badge telemetry at ~10fps so React cards display live distance & phase
+      // Sync discrete badge telemetry smoothly without re-render thrashing:
+      // Immediate when an animal triggers alert/settle, or when stationary/slowed down, or throttled to 1.2s during fast scroll
       const now = timeSec * 1000;
-      if (now - lastTelemetrySyncRef.current > 110) {
+      const isSlowOrStopped = Math.abs(jeep.velocity) < 0.8;
+      const timeSinceLastSync = now - lastTelemetrySyncRef.current;
+      const phaseChanged = snapshot.animals.some(
+        (a) => a.phase === 'alert' && a.distanceMeters < a.alertRadiusPx * 0.7,
+      );
+
+      if (
+        (phaseChanged && timeSinceLastSync > 250) ||
+        (isSlowOrStopped && timeSinceLastSync > 350) ||
+        timeSinceLastSync > 1200
+      ) {
         lastTelemetrySyncRef.current = now;
         setTelemetry({
           nearestAnimal: snapshot.nearestAnimal,

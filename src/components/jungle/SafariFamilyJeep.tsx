@@ -10,6 +10,7 @@ export interface SafariFamilyJeepRefs {
   coPilotCameraRef?: React.RefObject<SVGGElement | null>;
   kidBinocularRef?: React.RefObject<SVGGElement | null>;
   kidPointerRef?: React.RefObject<SVGGElement | null>;
+  underpassShadowRef?: React.RefObject<SVGGElement | null>;
 }
 
 interface SafariFamilyJeepProps {
@@ -19,6 +20,7 @@ interface SafariFamilyJeepProps {
 
 /**
  * Top-down / 2.5D open-top 4x4 safari Jeep carrying an excited family.
+ * Layered at z-20 (beneath z-30 cave masks & z-40 destination cards, above z-10 road).
  * Geometry faces +X (right) so GSAP MotionPathPlugin `autoRotate: true`
  * steers the vehicle tangent to the winding S-curve dirt trail, while passengers'
  * heads, telephoto camera, and binoculars swivel toward nearby wildlife.
@@ -35,7 +37,7 @@ export default function SafariFamilyJeep({
     <div
       ref={refs.containerRef}
       aria-hidden="true"
-      className="pointer-events-none absolute top-0 left-0 z-25 w-[96px] h-[58px] will-change-transform"
+      className="pointer-events-none absolute top-0 left-0 z-20 w-[96px] h-[58px] will-change-transform"
       style={{ transform: 'translate3d(-9999px, -9999px, 0)' }}
     >
       <svg
@@ -61,6 +63,11 @@ export default function SafariFamilyJeep({
             <stop offset="0%" stopColor="#D6BE8C" />
             <stop offset="100%" stopColor="#BA9F6B" />
           </linearGradient>
+          <radialGradient id="caveUnderpassShadowGrad" cx="50%" cy="50%" r="58%">
+            <stop offset="0%" stopColor="#010604" stopOpacity="0.96" />
+            <stop offset="58%" stopColor="#04120C" stopOpacity="0.82" />
+            <stop offset="100%" stopColor="#0B2117" stopOpacity="0.45" />
+          </radialGradient>
         </defs>
 
         {/* Warm Headlight Beams projecting ahead along +X and sweeping onto nearby wildlife */}
@@ -219,6 +226,22 @@ export default function SafariFamilyJeep({
             <circle cx="24" cy="22.5" r="2.6" fill="#E8C987" />
             <path d="M 24 19.8 L 28.2 16.8" stroke="#F4D3A1" strokeWidth="1.8" strokeLinecap="round" />
           </g>
+        </g>
+
+        {/* Smooth Dark Shadow Gradient Overlay for Cave / Canopy Underpass Effect */}
+        <g
+          ref={refs.underpassShadowRef}
+          style={{ opacity: 0, mixBlendMode: 'multiply' }}
+          className="pointer-events-none transition-opacity duration-300"
+        >
+          <rect
+            x="4"
+            y="5"
+            width="88"
+            height="48"
+            rx="8"
+            fill="url(#caveUnderpassShadowGrad)"
+          />
         </g>
       </svg>
     </div>

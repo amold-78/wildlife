@@ -363,6 +363,117 @@ export default function ParallaxJungleLayers({
         })}
       </svg>
 
+      {/* PLANE 2.5: ROCK CAVE & JUNGLE CANOPY OVERPASS (LAYERED AT Z-30 OVER ROAD & JEEP) */}
+      <svg
+        aria-hidden="true"
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        className="pointer-events-none absolute inset-0 z-30 overflow-visible"
+      >
+        <defs>
+          {/* Deep Ambient Cave Shadow Mask projected onto underpass entrance */}
+          <radialGradient
+            id="cavePortalShadowGrad"
+            cx="50%"
+            cy="50%"
+            r="50%"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#020805" stopOpacity="0.88" />
+            <stop offset="65%" stopColor="#05140E" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#0B2117" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient
+            id="rockCaveOverpassGrad"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <stop offset="0%" stopColor="#1E2E27" />
+            <stop offset="45%" stopColor="#2A3D34" />
+            <stop offset="100%" stopColor="#15221C" />
+          </linearGradient>
+        </defs>
+
+        {/* Rock Cave / Jungle Canopy Overpass Arch centered on the Ramganga Bridge Crossing */}
+        <g
+          transform={`translate(${riverCrossing.bridgeX}, ${riverCrossing.bridgeY}) rotate(${riverCrossing.bridgeAngleDeg})`}
+        >
+          {/* Cave Entrance Shadow Mask (z-30 over Jeep at z-20) */}
+          <ellipse
+            cx="0"
+            cy="0"
+            rx={isMobile ? 36 : 56}
+            ry={isMobile ? 48 : 72}
+            fill="url(#cavePortalShadowGrad)"
+            style={{ mixBlendMode: 'multiply' }}
+          />
+
+          {/* West Rock Abutment / Cave Wall */}
+          <path
+            d={
+              isMobile
+                ? 'M -28 -42 Q -38 -20 -32 0 Q -38 20 -28 42 L -18 38 Q -24 15 -20 0 Q -24 -15 -18 -38 Z'
+                : 'M -44 -64 Q -60 -30 -52 0 Q -60 30 -44 64 L -28 58 Q -38 24 -32 0 Q -38 -24 -28 -58 Z'
+            }
+            fill="url(#rockCaveOverpassGrad)"
+            stroke="#0D1A14"
+            strokeWidth="1.5"
+          />
+
+          {/* East Rock Abutment / Cave Wall */}
+          <path
+            d={
+              isMobile
+                ? 'M 28 -42 Q 38 -20 32 0 Q 38 20 28 42 L 18 38 Q 24 15 20 0 Q 24 -15 18 -38 Z'
+                : 'M 44 -64 Q 60 -30 52 0 Q 60 30 44 64 L 28 58 Q 38 24 32 0 Q 38 -24 28 -58 Z'
+            }
+            fill="url(#rockCaveOverpassGrad)"
+            stroke="#0D1A14"
+            strokeWidth="1.5"
+          />
+
+          {/* Elevated Carved Stone Cave Arch / Canopy Overpass Bridge */}
+          <path
+            d={
+              isMobile
+                ? 'M -32 -32 Q 0 -48 32 -32 L 28 -20 Q 0 -36 -28 -20 Z'
+                : 'M -52 -50 Q 0 -76 52 -50 L 46 -32 Q 0 -58 -46 -32 Z'
+            }
+            fill="#23352C"
+            stroke="#101C16"
+            strokeWidth="1.8"
+          />
+
+          {/* Southern Rock Overpass Arch */}
+          <path
+            d={
+              isMobile
+                ? 'M -32 32 Q 0 48 32 32 L 28 20 Q 0 36 -28 20 Z'
+                : 'M -52 50 Q 0 76 52 50 L 46 32 Q 0 58 -46 32 Z'
+            }
+            fill="#1E2E26"
+            stroke="#0E1913"
+            strokeWidth="1.8"
+          />
+
+          {/* Hanging Jungle Lianas & Spanish Moss Trailing from Overpass Arch */}
+          <path
+            d={
+              isMobile
+                ? 'M -18 -24 Q -22 -10 -16 5 M 0 -32 Q -4 -16 2 4 M 18 -24 Q 14 -10 20 6'
+                : 'M -30 -38 Q -38 -15 -26 12 M 0 -52 Q -8 -25 4 8 M 30 -38 Q 22 -15 32 14'
+            }
+            stroke="#3B694D"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            opacity="0.88"
+          />
+        </g>
+      </svg>
+
       {/* PLANE 3: FOREGROUND 4-CORNER JUNGLE CANOPY FRAMING */}
       {/* Top-Left Hanging Rainforest Vine & Monstera Leaf */}
       <div

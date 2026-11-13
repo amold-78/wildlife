@@ -145,15 +145,36 @@ export function lerp(a: number, b: number, t: number): number {
  * outer apex. On mobile (< 768px), the road tightens cleanly along the left rail
  * so both the Jeep and destination cards fit comfortably inside 390px viewports.
  */
+export interface CardBoundingBox {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+  width: number;
+  height: number;
+  centerY: number;
+}
+
+/**
+ * Computes a smooth, responsive multi-point cubic Bezier SVG S-curve weaving
+ * down the full expedition canvas.
+ *
+ * Strict Two-Lane Spatial Grid:
+ * - Left Destination Card (5% to 42% viewport width) -> Road apex routes wide to the RIGHT (68% to 82% viewport width).
+ * - Right Destination Card (58% to 95% viewport width) -> Road apex routes wide to the LEFT (18% to 32% viewport width).
+ * - Minimum 80px clearance from card bounding boxes with vertical tangent flattening alongside each card.
+ * - On mobile (< 768px), road stays strictly in the left lane (10% to 15%) while cards sit at 28%+ with clear separation.
+ */
 export function buildResponsiveSnakeTrail(params: {
   width: number;
   height: number;
   isMobile: boolean;
   checkpointYs?: number[];
+  cardBoxes?: (CardBoundingBox | null)[];
 }): SnakeTrailGeometry {
   const safeWidth = Math.max(300, Math.round(params.width));
   const safeHeight = Math.max(1200, Math.round(params.height));
-  const { isMobile } = params;
+  const { isMobile, cardBoxes } = params;
 
   const defaultRatios = [0.11, 0.26, 0.41, 0.59, 0.74, 0.89];
   const ys =
@@ -161,26 +182,30 @@ export function buildResponsiveSnakeTrail(params: {
       ? params.checkpointYs.map((y) => clamp(Math.round(y), 80, safeHeight - 80))
       : defaultRatios.map((r) => Math.round(safeHeight * r));
 
-  // Anchor coordinates along the S-curve
+  // Anchor coordinates along the S-curve: centered at 50% width
   const startPoint: Point2D = {
-    x: isMobile ? Math.round(safeWidth * 0.13) : Math.round(safeWidth * 0.5),
+    x: Math.round(safeWidth * 0.5),
     y: 0,
   };
 
   const checkpointAnchors: Point2D[] = TRAIL_CHECKPOINTS.map((cp, idx) => {
     if (isMobile) {
-      // Tight S-wave along the left 9%..17% corridor so cards on the right have ample readable width
-      const xRatio = cp.bendSide === 'right' ? 0.17 : 0.09;
+      // Mobile: Centered road corridor (50%) so Jeep stays centered on screen
+      const subtleWiggle = (idx % 2 === 0 ? 0.015 : -0.015);
       return {
-        x: Math.round(safeWidth * xRatio),
+        x: Math.round(safeWidth * (0.5 + subtleWiggle)),
         y: ys[idx],
       };
     }
 
-    // Desktop sweeping S-curve leaving clear alternate card room on opposite side
-    const xRatio = cp.bendSide === 'right' ? 0.65 : 0.35;
+    // Desktop: Keep road in the center corridor (centered at 50%)
+    // Left card sits at 4%..40%, Right card sits at 60%..96%
+    // Road sways gently between 47.5% and 52.5% so Jeep steers naturally down the center corridor
+    const sway = idx % 2 === 0 ? 0.024 : -0.024;
+    const targetX = Math.round(safeWidth * (0.5 + sway));
+
     return {
-      x: Math.round(safeWidth * xRatio),
+      x: targetX,
       y: ys[idx],
     };
   });
@@ -196,34 +221,74 @@ export function buildResponsiveSnakeTrail(params: {
   };
 
   const endPoint: Point2D = {
-    x: isMobile ? Math.round(safeWidth * 0.13) : Math.round(safeWidth * 0.5),
+    x: Math.round(safeWidth * 0.5),
     y: safeHeight,
   };
 
-  // Assemble ordered nodes through start -> 0 -> 1 -> 2 -> bridge -> 3 -> 4 -> 5 -> end
-  const waypoints: Point2D[] = [
-    startPoint,
-    checkpointAnchors[0],
-    checkpointAnchors[1],
-    checkpointAnchors[2],
-    bridgePoint,
-    checkpointAnchors[3],
-    checkpointAnchors[4],
-    checkpointAnchors[5],
-    endPoint,
-  ];
+  // Build flattened tangent dwell segments alongside cards so the Jeep travels
+  // parallel to each card's outer boundary without cutting corners or drifting into cards
+  interface PathNode {
+    x: number;
+    y: number;
+    isDwell?: boolean;
+  }
 
-  // Build C1-smooth cubic Bezier segments with vertical-flowing handles at bends
-  const segments: string[] = [`M ${waypoints[0].x} ${waypoints[0].y}`];
-  for (let i = 0; i < waypoints.length - 1; i++) {
-    const p0 = waypoints[i];
-    const p1 = waypoints[i + 1];
+  const pathNodes: PathNode[] = [{ x: startPoint.x, y: startPoint.y }];
+
+  for (let i = 0; i < 3; i++) {
+    const cpAnchor = checkpointAnchors[i];
+    const cardBox = cardBoxes?.[i];
+    const dwellHeight = isMobile
+      ? 40
+      : Math.max(60, Math.min(130, Math.round((cardBox?.height || 360) * 0.32)));
+
+    // Pre-dwell entry, apex center, and post-dwell exit with vertical tangent alignment
+    pathNodes.push({ x: cpAnchor.x, y: cpAnchor.y - dwellHeight, isDwell: true });
+    pathNodes.push({ x: cpAnchor.x, y: cpAnchor.y, isDwell: true });
+    pathNodes.push({ x: cpAnchor.x, y: cpAnchor.y + dwellHeight, isDwell: true });
+  }
+
+  // Canyon river bridge crossing node
+  pathNodes.push({ x: bridgePoint.x, y: bridgePoint.y - 30 });
+  pathNodes.push({ x: bridgePoint.x, y: bridgePoint.y });
+  pathNodes.push({ x: bridgePoint.x, y: bridgePoint.y + 30 });
+
+  for (let i = 3; i < 6; i++) {
+    const cpAnchor = checkpointAnchors[i];
+    const cardBox = cardBoxes?.[i];
+    const dwellHeight = isMobile
+      ? 40
+      : Math.max(60, Math.min(130, Math.round((cardBox?.height || 360) * 0.32)));
+
+    pathNodes.push({ x: cpAnchor.x, y: cpAnchor.y - dwellHeight, isDwell: true });
+    pathNodes.push({ x: cpAnchor.x, y: cpAnchor.y, isDwell: true });
+    pathNodes.push({ x: cpAnchor.x, y: cpAnchor.y + dwellHeight, isDwell: true });
+  }
+
+  pathNodes.push({ x: endPoint.x, y: endPoint.y });
+
+  // Build C1-smooth cubic Bezier segments with vertical-flowing handles
+  const segments: string[] = [`M ${pathNodes[0].x} ${pathNodes[0].y}`];
+  for (let i = 0; i < pathNodes.length - 1; i++) {
+    const p0 = pathNodes[i];
+    const p1 = pathNodes[i + 1];
     const dy = p1.y - p0.y;
-    const cp1x = p0.x;
-    const cp1y = Math.round(p0.y + dy * 0.52);
-    const cp2x = p1.x;
-    const cp2y = Math.round(p1.y - dy * 0.52);
-    segments.push(`C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`);
+
+    if (p0.x === p1.x) {
+      // Pure vertical crawl corridor alongside the destination card
+      const cp1x = p0.x;
+      const cp1y = Math.round(p0.y + dy * 0.33);
+      const cp2x = p1.x;
+      const cp2y = Math.round(p1.y - dy * 0.33);
+      segments.push(`C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`);
+    } else {
+      // Smooth S-curve cross-transition between opposite lanes
+      const cp1x = p0.x;
+      const cp1y = Math.round(p0.y + dy * 0.52);
+      const cp2x = p1.x;
+      const cp2y = Math.round(p1.y - dy * 0.52);
+      segments.push(`C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`);
+    }
   }
 
   const roadPath = segments.join(' ');
@@ -419,3 +484,208 @@ export function resolveActiveCheckpointIndex(
   }
   return bestIdx;
 }
+
+export function smoothstep(edge0: number, edge1: number, x: number): number {
+  if (edge0 === edge1) return x >= edge1 ? 1 : 0;
+  const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+/**
+ * Time-Warping Checkpoint Deceleration:
+ * Maps linear scroll progress [0, 1] into a smooth, strictly monotonic progression
+ * where the vehicle naturally decelerates to a slow safari crawl beside each card
+ * (giving the user time to inspect the card and view surrounding reactive wildlife)
+ * before gently accelerating into the open jungle curves toward the next stop.
+ */
+export function warpCheckpointDeceleration(
+  p: number,
+  checkpointRatios: number[] = [0.11, 0.26, 0.41, 0.59, 0.74, 0.89],
+): number {
+  const clampedP = clamp(p, 0, 1);
+  if (clampedP <= 0) return 0;
+  if (clampedP >= 1) return 1;
+
+  const sigma = 0.038;
+  const sqrtTwo = Math.SQRT2;
+  const sqrtHalfPi = Math.sqrt(Math.PI / 2);
+
+  // High precision erf approximation (Abramowitz and Stegun 7.1.26)
+  const approxErf = (x: number): number => {
+    const sign = x >= 0 ? 1 : -1;
+    const absX = Math.abs(x);
+    const a1 = 0.254829592;
+    const a2 = -0.284496736;
+    const a3 = 1.421413741;
+    const a4 = -1.453152027;
+    const a5 = 1.061405429;
+    const tVal = 1.0 / (1.0 + 0.3275911 * absX);
+    const poly = ((((a5 * tVal + a4) * tVal + a3) * tVal + a2) * tVal + a1) * tVal;
+    const yVal = 1.0 - poly * Math.exp(-absX * absX);
+    return sign * yVal;
+  };
+
+  const wellDepth = 0.74;
+
+  const indefiniteIntegral = (x: number): number => {
+    let sum = x;
+    for (const mu of checkpointRatios) {
+      const z = (x - mu) / (sigma * sqrtTwo);
+      const integralPart = sigma * sqrtHalfPi * approxErf(z);
+      sum -= wellDepth * integralPart;
+    }
+    return sum;
+  };
+
+  const i0 = indefiniteIntegral(0);
+  const i1 = indefiniteIntegral(1);
+  const ip = indefiniteIntegral(clampedP);
+
+  const denom = i1 - i0;
+  if (denom <= 0) return clampedP;
+
+  const result = (ip - i0) / denom;
+  return clamp(result, 0, 1);
+}
+
+export interface UnderpassState {
+  underpassFactor: number;
+  isUnderpass: boolean;
+  scale: number;
+  shadowOpacity: number;
+  headlightBoost: number;
+}
+
+/**
+ * Computes whether the vehicle is passing beneath an elevated rock cave arch,
+ * jungle canopy overpass, or the Ramganga canyon bridge.
+ * Returns depth scale (1.00 down to 0.92), shadow overlay opacity, and headlight boost.
+ */
+export function computeUnderpassState(
+  progress: number,
+  checkpointRatios: number[] = [0.11, 0.26, 0.41, 0.59, 0.74, 0.89],
+): UnderpassState {
+  const p = clamp(progress, 0, 1);
+
+  // 1. Center Ramganga Canyon rock cave & canopy bridge overpass
+  const bridgeFactor =
+    smoothstep(0.44, 0.49, p) * (1 - smoothstep(0.53, 0.58, p));
+
+  // 2. Destination card canopy / rock arch overpasses
+  let cardOverpassFactor = 0;
+  for (const cpT of checkpointRatios) {
+    const halfWidth = 0.036;
+    const start = cpT - halfWidth;
+    const mid1 = cpT - 0.012;
+    const mid2 = cpT + 0.012;
+    const end = cpT + halfWidth;
+    const f = smoothstep(start, mid1, p) * (1 - smoothstep(mid2, end, p));
+    if (f > cardOverpassFactor) {
+      cardOverpassFactor = f;
+    }
+  }
+
+  const underpassFactor = Number(
+    Math.max(bridgeFactor, cardOverpassFactor * 0.92).toFixed(3),
+  );
+  const isUnderpass = underpassFactor > 0.15;
+  const scale = Number((1.0 - underpassFactor * 0.08).toFixed(3)); // 1.0 -> 0.92
+  const shadowOpacity = Number((underpassFactor * 0.82).toFixed(3));
+  const headlightBoost = Number((underpassFactor * 0.95).toFixed(3));
+
+  return {
+    underpassFactor,
+    isUnderpass,
+    scale,
+    shadowOpacity,
+    headlightBoost,
+  };
+}
+
+export interface RoadSamplePoint {
+  x: number;
+  y: number;
+  angle: number;
+  progress: number;
+}
+
+export interface RoadSampler {
+  getPointAtY: (targetY: number) => RoadSamplePoint;
+}
+
+/**
+ * High-performance pre-sampled LUT for SVG road paths.
+ * Allows O(log N) zero-allocation lookup of (x, angle) at any canvas Y coordinate
+ * without calling expensive SVG getPointAtLength on every frame.
+ */
+export function createRoadSampler(
+  pathEl: SVGPathElement | null,
+  totalHeight: number,
+  samplesCount = 400,
+): RoadSampler {
+  if (!pathEl || typeof pathEl.getTotalLength !== 'function') {
+    return {
+      getPointAtY: (targetY: number) => ({
+        x: 0,
+        y: targetY,
+        angle: 180,
+        progress: clamp(targetY / (totalHeight || 1), 0, 1),
+      }),
+    };
+  }
+
+  const totalLength = pathEl.getTotalLength();
+  const samples: RoadSamplePoint[] = [];
+
+  for (let i = 0; i <= samplesCount; i++) {
+    const s = (i / samplesCount) * totalLength;
+    const pt = pathEl.getPointAtLength(s);
+    const sNext = Math.min(totalLength, s + 3);
+    const ptNext = pathEl.getPointAtLength(sNext);
+    const dx = ptNext.x - pt.x;
+    const dy = ptNext.y - pt.y;
+    // Rotation angle: 0deg is pointing +X (right), 90deg is pointing +Y (downwards)
+    const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+    samples.push({
+      x: pt.x,
+      y: pt.y,
+      angle,
+      progress: s / totalLength,
+    });
+  }
+
+  return {
+    getPointAtY: (targetY: number): RoadSamplePoint => {
+      if (samples.length === 0) return { x: 0, y: targetY, angle: 90, progress: 0 };
+      if (targetY <= samples[0].y) return samples[0];
+      if (targetY >= samples[samples.length - 1].y) return samples[samples.length - 1];
+
+      let low = 0;
+      let high = samples.length - 1;
+      while (low <= high) {
+        const mid = (low + high) >> 1;
+        if (samples[mid].y < targetY) {
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+
+      const idx0 = Math.max(0, low - 1);
+      const idx1 = Math.min(samples.length - 1, low);
+      const p0 = samples[idx0];
+      const p1 = samples[idx1];
+      const span = p1.y - p0.y;
+      if (span <= 0) return p0;
+
+      const t = (targetY - p0.y) / span;
+      return {
+        x: p0.x + (p1.x - p0.x) * t,
+        y: targetY,
+        angle: p0.angle + (p1.angle - p0.angle) * t,
+        progress: p0.progress + (p1.progress - p0.progress) * t,
+      };
+    },
+  };
+}
+

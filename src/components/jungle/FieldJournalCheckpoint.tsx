@@ -1,8 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  ChevronLeft,
-  ChevronRight,
-  Compass,
   Heart,
   MapPin,
   Star,
@@ -67,7 +64,6 @@ function SlideImageFrame({
   if (failed || !src) {
     return (
       <div className="w-full h-full bg-gradient-to-br from-[#173F35] via-[#0D2922] to-[#081713] flex flex-col items-center justify-center p-4 text-center text-[#E9DFC9]">
-        <Compass className="w-6 h-6 text-[#C99A4A] mb-1.5" />
         <span className="font-serif text-xs font-semibold">{fallbackTitle}</span>
       </div>
     );
@@ -118,8 +114,6 @@ export default function FieldJournalCheckpoint({
     direction: 1,
   });
 
-  const [isHovered, setIsHovered] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -135,9 +129,9 @@ export default function FieldJournalCheckpoint({
     return () => mq.removeEventListener?.('change', onChange);
   }, []);
 
-  // Gentle auto-flip cadence only while checkpoint is active and untouched by user
+  // Auto-flip cadence every 2 seconds across all reserve cards
   useEffect(() => {
-    if (!isActive || isHovered || userInteracted || prefersReducedMotion || slides.length <= 1) {
+    if (prefersReducedMotion || slides.length <= 1) {
       return;
     }
     const timer = window.setInterval(() => {
@@ -149,27 +143,13 @@ export default function FieldJournalCheckpoint({
           direction: stepped.direction,
         };
       });
-    }, 4500);
+    }, 2000);
     return () => window.clearInterval(timer);
-  }, [isActive, isHovered, userInteracted, prefersReducedMotion, slides.length]);
+  }, [prefersReducedMotion, slides.length]);
 
   const handleStep = (delta: number) => {
-    setUserInteracted(true);
     setDeckState((prev) => {
       const stepped = stepSlideIndex(prev.activeIndex, delta, slides.length, 'delta');
-      return {
-        activeIndex: stepped.nextIndex,
-        prevIndex: stepped.prevIndex,
-        direction: stepped.direction,
-      };
-    });
-  };
-
-  const handleJump = (targetIndex: number) => {
-    if (targetIndex === deckState.activeIndex) return;
-    setUserInteracted(true);
-    setDeckState((prev) => {
-      const stepped = stepSlideIndex(prev.activeIndex, targetIndex, slides.length, 'jump');
       return {
         activeIndex: stepped.nextIndex,
         prevIndex: stepped.prevIndex,
@@ -193,10 +173,13 @@ export default function FieldJournalCheckpoint({
 
   const useDarkSurface = true;
 
+  // Spatial Alignment:
+  // Mobile: Centered card (w-[94%] max-w-[420px] mx-auto) over the centered trail path
+  // Desktop: Left card sits at 4%..42%, Right card sits at 58%..96%, leaving the 42%..58% center corridor clear
   const alignmentClass =
     checkpoint.cardSide === 'left'
-      ? 'pl-[21%] pr-2 sm:pl-[23%] md:pl-0 md:pr-0 md:mr-auto md:ml-12 lg:ml-20'
-      : 'pl-[21%] pr-2 sm:pl-[23%] md:pl-0 md:pr-0 md:ml-auto md:mr-12 lg:mr-20';
+      ? 'w-[94%] max-w-[420px] mx-auto px-1 sm:px-2 md:px-0 md:mr-auto md:ml-[4%] md:w-[38%] md:max-w-[440px]'
+      : 'w-[94%] max-w-[420px] mx-auto px-1 sm:px-2 md:px-0 md:ml-auto md:mr-[4%] md:w-[38%] md:max-w-[440px]';
 
   const cardSurfaceStyle = isDarkTheme
     ? 'bg-[#081C16] text-[#F5F1E8] border-[#2C614F] shadow-[0_24px_48px_-14px_rgba(0,0,0,0.82)]'
@@ -222,17 +205,43 @@ export default function FieldJournalCheckpoint({
       data-active={isActive ? 'true' : 'false'}
       data-active-slide={deckState.activeIndex}
       data-sighting-phase={liveSighting?.phase || 'idle'}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`relative z-20 w-full md:w-[430px] lg:w-[460px] transition-transform duration-500 ease-out ${alignmentClass} ${arrivalScaleClass}`}
+      className={`relative z-40 w-full transition-transform duration-500 ease-out ${alignmentClass} ${arrivalScaleClass}`}
     >
       <div className="relative">
+        {/* CARVED STONE & JUNGLE VINE CAVE ARCH FRAME (Top Edge Elevated Overpass) */}
+        <div
+          aria-hidden="true"
+          className="absolute -top-3.5 inset-x-2 h-6 pointer-events-none z-30 drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] overflow-visible"
+        >
+          <svg viewBox="0 0 400 24" fill="none" className="w-full h-full preserve-3d" preserveAspectRatio="none">
+            {/* Weathered Stone Canopy Ridge */}
+            <path
+              d="M 4 22 C 40 6, 120 4, 200 4 C 280 4, 360 6, 396 22 L 392 24 C 356 10, 280 8, 200 8 C 120 8, 44 10, 8 24 Z"
+              fill="#263A32"
+              stroke="#13231D"
+              strokeWidth="1.2"
+            />
+            {/* Moss & Lichen Texture Highlights */}
+            <path
+              d="M 60 10 Q 110 6 160 9 M 240 9 Q 290 6 340 10"
+              stroke="#4A7558"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              opacity="0.8"
+            />
+            {/* Stalactite Rock Teeth & Hanging Roots */}
+            <path d="M 95 12 L 100 20 L 105 12 Z" fill="#1C2D26" />
+            <path d="M 195 10 L 200 22 L 205 10 Z" fill="#182721" />
+            <path d="M 305 12 L 310 19 L 315 12 Z" fill="#1C2D26" />
+          </svg>
+        </div>
+
         {/* Top-Right Hanging Liana Vine & Teak Leaves Overlapping Card Frame */}
         <div
           aria-hidden="true"
           data-card-foliage="top-right"
           style={vineShake ? { transform: `rotate(${vineShake}deg)` } : undefined}
-          className="absolute -top-3.5 -right-3.5 w-12 h-12 sm:w-14 sm:h-14 pointer-events-none z-30 drop-shadow-lg transition-transform duration-200"
+          className="absolute -top-4 -right-3.5 w-12 h-12 sm:w-14 sm:h-14 pointer-events-none z-35 drop-shadow-lg transition-transform duration-200"
         >
           <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
             <path d="M 100 0 Q 60 20 50 65 Q 40 85 20 95" stroke="#451A03" strokeWidth="3.5" strokeLinecap="round" />
@@ -246,12 +255,32 @@ export default function FieldJournalCheckpoint({
           aria-hidden="true"
           data-card-foliage="bottom-left"
           style={vineShake ? { transform: `rotate(${-vineShake * 0.8}deg)` } : undefined}
-          className="absolute -bottom-3.5 -left-3.5 w-12 h-12 sm:w-14 sm:h-14 pointer-events-none z-30 drop-shadow-lg transition-transform duration-200"
+          className="absolute -bottom-4 -left-3.5 w-12 h-12 sm:w-14 sm:h-14 pointer-events-none z-35 drop-shadow-lg transition-transform duration-200"
         >
           <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
             <path d="M 0 100 Q 30 70 65 50 Q 85 40 95 20" stroke="#14532D" strokeWidth="2.5" strokeLinecap="round" />
             <path d="M 30 75 Q 15 55 5 65 Q 20 80 30 75" fill="#15803D" opacity="0.85" />
             <path d="M 60 55 Q 45 35 35 45 Q 50 60 60 55" fill="#22C55E" opacity="0.9" />
+          </svg>
+        </div>
+
+        {/* CARVED STONE CAVE SILL / OVERPASS ARCH (Bottom Edge Rock Base) */}
+        <div
+          aria-hidden="true"
+          className="absolute -bottom-3.5 inset-x-2 h-6 pointer-events-none z-30 drop-shadow-[0_8px_16px_rgba(0,0,0,0.85)] overflow-visible"
+        >
+          <svg viewBox="0 0 400 24" fill="none" className="w-full h-full preserve-3d" preserveAspectRatio="none">
+            {/* Weathered Stone Foundation Arch */}
+            <path
+              d="M 4 2 C 44 14, 120 18, 200 18 C 280 18, 356 14, 396 2 L 392 0 C 356 10, 280 14, 200 14 C 120 14, 44 10, 8 0 Z"
+              fill="#1C2D26"
+              stroke="#0E1914"
+              strokeWidth="1.2"
+            />
+            {/* Hanging Tendril Vines & Moss Droplets */}
+            <path d="M 80 14 Q 85 22 90 15" stroke="#2D5A3F" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M 180 16 Q 185 24 190 17" stroke="#2D5A3F" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M 290 14 Q 295 23 300 16" stroke="#2D5A3F" strokeWidth="1.6" strokeLinecap="round" />
           </svg>
         </div>
 
@@ -331,61 +360,10 @@ export default function FieldJournalCheckpoint({
               );
             })}
 
-            {/* Slide Frame Counter on front card */}
-            <div
-              aria-live="polite"
-              className="absolute top-2.5 left-2.5 z-40 px-2 py-1 rounded-md bg-[#09211A]/90 border border-white/15 text-xs font-mono tabular-nums text-[#F4EBDA] pointer-events-none"
-            >
-              {deckState.activeIndex + 1} / {slides.length}
-            </div>
-
-            {/* Save Reserve Toggle */}
-            <button
-              type="button"
-              aria-label={isSaved ? `Remove ${safari.name} from saved reserves` : `Save ${safari.name}`}
-              onClick={() => onToggleWishlist(safari.id)}
-              className={`absolute top-2.5 right-2.5 z-40 w-8 h-8 rounded-lg flex items-center justify-center transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A] ${
-                isSaved ? 'bg-rose-600 text-white' : 'bg-[#09211A]/90 text-white hover:bg-[#09211A] border border-white/15'
-              }`}
-            >
-              <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
-            </button>
-
-            {/* Left / Right Flip Deck Navigation */}
-            {slides.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  data-deck-control="prev"
-                  aria-label={`Previous photo of ${safari.name}`}
-                  onClick={() => handleStep(-1)}
-                  className="absolute left-2.5 top-1/2 -translate-y-1/2 z-40 w-8 h-8 rounded-lg bg-[#09211A]/85 hover:bg-[#09211A] border border-white/25 text-white flex items-center justify-center transition active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A]"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  data-deck-control="next"
-                  aria-label={`Next photo of ${safari.name}`}
-                  onClick={() => handleStep(1)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 z-40 w-8 h-8 rounded-lg bg-[#09211A]/85 hover:bg-[#09211A] border border-white/25 text-white flex items-center justify-center transition active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A]"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </>
-            )}
-
-            {/* Active Caption, Rating & Segmented Deck Track */}
-            <div className="absolute inset-x-3 bottom-2 z-40 space-y-1.5">
-              <div className="flex items-center justify-between gap-2 text-xs text-[#F4EBDA]">
-                <span data-slide-caption="true" className="font-medium truncate">
-                  {currentSlide?.caption || safari.highlight}
-                </span>
-                <span className="inline-flex items-center gap-1 font-mono tabular-nums shrink-0 font-semibold">
-                  <Star className="w-3.5 h-3.5 text-[#C99A4A] fill-current" />
-                  <span>{safari.rating}</span>
-                </span>
+            {/* Active Photo Caption & Clean Minimalist Progress Bars (Zero icons on images) */}
+            <div className="absolute inset-x-3 bottom-2.5 z-40 space-y-1.5 pointer-events-none">
+              <div className="text-xs text-[#F4EBDA] font-medium truncate drop-shadow-md">
+                {currentSlide?.caption || safari.highlight}
               </div>
 
               {slides.length > 1 && (
@@ -397,23 +375,18 @@ export default function FieldJournalCheckpoint({
                   {slides.map((slide, idx) => {
                     const activeSegment = idx === deckState.activeIndex;
                     return (
-                      <button
+                      <div
                         key={slide.caption}
-                        type="button"
-                        role="tab"
-                        aria-selected={activeSegment}
-                        aria-label={`View photo ${idx + 1}: ${slide.caption}`}
-                        onClick={() => handleJump(idx)}
-                        className="flex-1 py-1 cursor-pointer group focus-visible:outline-none"
+                        className="flex-1 py-0.5"
                       >
                         <span
                           className={`block h-1 w-full rounded-sm transition-all duration-300 ${
                             activeSegment
                               ? 'bg-[#C99A4A]'
-                              : 'bg-white/35 group-hover:bg-white/65'
+                              : 'bg-white/35'
                           }`}
                         />
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -424,17 +397,41 @@ export default function FieldJournalCheckpoint({
 
         {/* Distilled Expedition Header, Live Sighting Badge & Explore Reserve CTA */}
         <div className="p-3.5 sm:p-4 space-y-2.5">
-          <div>
-            <h3
-              className={`font-serif text-lg sm:text-xl font-bold leading-snug ${
-                useDarkSurface ? 'text-[#F8F5EE]' : 'text-[#0D2922]'
-              }`}
-            >
-              {safari.name}
-            </h3>
-            <p className={`text-xs mt-0.5 truncate ${mutedTextClass}`}>
-              {safari.state} · {checkpoint.zoneTag}
-            </p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3
+                className={`font-serif text-lg sm:text-xl font-bold leading-snug ${
+                  useDarkSurface ? 'text-[#F8F5EE]' : 'text-[#0D2922]'
+                }`}
+              >
+                {safari.name}
+              </h3>
+              <p className={`text-xs mt-0.5 truncate ${mutedTextClass}`}>
+                {safari.state} · {checkpoint.zoneTag}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 shrink-0 pt-0.5">
+              {/* Rating */}
+              <span className="inline-flex items-center gap-1 text-xs font-mono tabular-nums font-semibold text-[#E4B865]">
+                <Star className="w-3.5 h-3.5 text-[#C99A4A] fill-current" />
+                <span>{safari.rating}</span>
+              </span>
+
+              {/* Wishlist toggle */}
+              <button
+                type="button"
+                aria-label={isSaved ? `Remove ${safari.name} from saved reserves` : `Save ${safari.name}`}
+                onClick={() => onToggleWishlist(safari.id)}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C99A4A] ${
+                  isSaved
+                    ? 'bg-rose-600 text-white'
+                    : 'bg-[#143B2F] text-white hover:bg-[#1C4E3F] border border-white/10'
+                }`}
+              >
+                <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+              </button>
+            </div>
           </div>
 
           {/* Live Proximity Wildlife Sighting Telemetry Row */}

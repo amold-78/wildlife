@@ -21,6 +21,8 @@ import {
   computeAtmospherePhase,
   computeVelocityDynamics,
   resolveActiveCheckpointIndex,
+  computeUnderpassState,
+  createRoadSampler,
 } from '../utils/jungleTrailEngine';
 import {
   Calendar,
@@ -117,6 +119,7 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
   const coPilotCameraRef = useRef(null);
   const kidBinocularRef = useRef(null);
   const kidPointerRef = useRef(null);
+  const underpassShadowRef = useRef(null);
 
   const passengerRefs = useMemo(
     () => ({
@@ -185,12 +188,22 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
       const height = Math.max(1600, Math.round(canvasEl.scrollHeight));
       const isMobile = window.innerWidth < 768;
 
-      const measuredYs = TRAIL_CHECKPOINTS.map((_, idx) => {
+      const measuredCardBoxes = TRAIL_CHECKPOINTS.map((_, idx) => {
         const cardEl = checkpointRefs.current[idx];
         if (!cardEl) return null;
         const cRect = cardEl.getBoundingClientRect();
-        return Math.round(cRect.top - rect.top + cRect.height * 0.44);
+        return {
+          left: Math.round(cRect.left - rect.left),
+          right: Math.round(cRect.right - rect.left),
+          top: Math.round(cRect.top - rect.top),
+          bottom: Math.round(cRect.bottom - rect.top),
+          width: Math.round(cRect.width),
+          height: Math.round(cRect.height),
+          centerY: Math.round(cRect.top - rect.top + cRect.height * 0.5),
+        };
       });
+
+      const measuredYs = measuredCardBoxes.map((box) => box?.centerY ?? null);
 
       const validYs = measuredYs.every((v) => typeof v === 'number' && v > 0)
         ? measuredYs
@@ -205,8 +218,8 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
           validYs &&
           prev.checkpointYs &&
           validYs.every((y, idx) => Math.abs(y - prev.checkpointYs[idx]) <= 4);
-        if (sameSize && (sameYs || !validYs)) return prev;
-        return { width, height, isMobile, checkpointYs: validYs };
+        if (sameSize && (sameYs || !validYs) && prev.cardBoxes) return prev;
+        return { width, height, isMobile, checkpointYs: validYs, cardBoxes: measuredCardBoxes };
       });
     };
 
@@ -252,11 +265,15 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
     let lenis = null;
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
+
     if (!prefersReducedMotion) {
       lenis = new Lenis({
-        lerp: 0.085,
+        lerp: isMobileScreen ? 0.12 : 0.08,
         smoothWheel: true,
-        wheelMultiplier: 0.92,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.0,
+        syncTouch: false,
       });
       lenisRef.current = lenis;
       lenis.on('scroll', (e) => {
@@ -265,116 +282,115 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
       });
     }
 
+    // Build deterministic zero-allocation LUT sampler for the road path
+    const roadSampler = createRoadSampler(pathEl, trailGeometry.height, 450);
+    const checkpointRatios = trailGeometry.checkpointCoords.map((c) => c.pathT);
     let lastHudSync = 0;
 
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
-        gsap.set(jeepEl, {
-          motionPath: {
-            path: pathEl,
-            align: pathEl,
-            alignOrigin: [0.5, 0.5],
-            autoRotate: true,
-            start: 0.06,
-            end: 0.06,
-          },
-        });
+        const initialPoint = roadSampler.getPointAtY(80);
+        jeepEl.style.transform = `translate3d(${initialPoint.x - 48}px, 51px, 0) rotate(${initialPoint.angle}deg)`;
         return;
       }
 
-      gsap.to(jeepEl, {
-        ease: 'none',
-        motionPath: {
-          path: pathEl,
-          align: pathEl,
-          alignOrigin: [0.5, 0.5],
-          autoRotate: true,
-        },
-        scrollTrigger: {
-          trigger: canvasEl,
-          start: 'top 76%',
-          end: 'bottom 84%',
-          scrub: 0.55,
-          onUpdate: (self) => {
-            const p = self.progress;
-            progressRef.current = p;
+      ScrollTrigger.create({
+        trigger: canvasEl,
+        start: 'top 50%',
+        end: 'bottom 50%',
+        scrub: true,
+        onUpdate: (self) => {
+          const p = self.progress;
 
-            // Compute rotation angle directly from element GSAP rotation transform
-            const rot = Number(gsap.getProperty(jeepEl, 'rotation')) || 180;
-            bearingRef.current = rot;
+          // Update active checkpoint index discretely
+          const nearestIdx = resolveActiveCheckpointIndex(p, trailGeometry.checkpointCoords);
+          setActiveCheckpointIndex((prev) => (prev === nearestIdx ? prev : nearestIdx));
 
-            // Update active checkpoint when crossing waypoint threshold
-            const nearestIdx = resolveActiveCheckpointIndex(p, trailGeometry.checkpointCoords);
-            setActiveCheckpointIndex((prev) => (prev === nearestIdx ? prev : nearestIdx));
+          // Update atmosphere overlays
+          const atm = computeAtmospherePhase(p);
+          const underpass = computeUnderpassState(p, checkpointRatios);
 
-            // Update atmosphere overlays (Morning Mist -> Deep Canopy -> Night Camp Firelight)
-            const atm = computeAtmospherePhase(p);
-            if (mistOverlayRef.current) {
-              mistOverlayRef.current.style.opacity = String(atm.mistOpacity);
-            }
-            if (firelightOverlayRef.current) {
-              firelightOverlayRef.current.style.opacity = String(atm.firelightOpacity);
-            }
-            if (headlightRef.current) {
-              const targetHeadlight = darkMode ? Math.max(0.85, atm.headlightOpacity) : atm.headlightOpacity;
-              headlightRef.current.style.opacity = String(targetHeadlight);
-            }
+          if (mistOverlayRef.current) {
+            mistOverlayRef.current.style.opacity = String(atm.mistOpacity);
+          }
+          if (firelightOverlayRef.current) {
+            firelightOverlayRef.current.style.opacity = String(atm.firelightOpacity);
+          }
+          if (headlightRef.current) {
+            const baseHeadlight = darkMode ? Math.max(0.85, atm.headlightOpacity) : atm.headlightOpacity;
+            const activeHeadlight = Math.max(baseHeadlight, underpass.headlightBoost);
+            headlightRef.current.style.opacity = String(activeHeadlight);
+          }
+          if (underpassShadowRef.current) {
+            underpassShadowRef.current.style.opacity = String(underpass.shadowOpacity);
+          }
 
-            // Parallax Plane 1 (Topographical background shifts slower than trail)
-            if (backgroundOffsetRef.current) {
-              backgroundOffsetRef.current.style.transform = `translate3d(0, ${Math.round(p * -56)}px, 0)`;
-            }
+          // Parallax Plane 1 (Topographical background shifts slower than trail)
+          if (backgroundOffsetRef.current) {
+            backgroundOffsetRef.current.style.transform = `translate3d(0, ${Math.round(p * -56)}px, 0)`;
+          }
 
-            // Parallax Plane 3 (4-corner foliage parts outward and drifts vertically while scrolling)
-            const foliageParting = Math.round(Math.sin(p * Math.PI) * 24);
-            const foliageDriftY = Math.round(p * -120);
-            if (topLeftFoliageRef.current) {
-              topLeftFoliageRef.current.style.transform = `translate3d(${-foliageParting}px, ${foliageDriftY * 0.15}px, 0)`;
-            }
-            if (topRightFoliageRef.current) {
-              topRightFoliageRef.current.style.transform = `translate3d(${foliageParting}px, ${-foliageDriftY * 0.15}px, 0)`;
-            }
-            if (bottomLeftFoliageRef.current) {
-              bottomLeftFoliageRef.current.style.transform = `translate3d(${-foliageParting * 0.8}px, ${foliageDriftY * 0.1}px, 0)`;
-            }
-            if (bottomRightFoliageRef.current) {
-              bottomRightFoliageRef.current.style.transform = `translate3d(${foliageParting * 0.8}px, ${-foliageDriftY * 0.1}px, 0)`;
-            }
+          // Parallax Plane 3 (4-corner foliage drift)
+          const foliageParting = Math.round(Math.sin(p * Math.PI) * 24);
+          const foliageDriftY = Math.round(p * -120);
+          if (topLeftFoliageRef.current) {
+            topLeftFoliageRef.current.style.transform = `translate3d(${-foliageParting}px, ${foliageDriftY * 0.15}px, 0)`;
+          }
+          if (topRightFoliageRef.current) {
+            topRightFoliageRef.current.style.transform = `translate3d(${foliageParting}px, ${-foliageDriftY * 0.15}px, 0)`;
+          }
+          if (bottomLeftFoliageRef.current) {
+            bottomLeftFoliageRef.current.style.transform = `translate3d(${-foliageParting * 0.8}px, ${foliageDriftY * 0.1}px, 0)`;
+          }
+          if (bottomRightFoliageRef.current) {
+            bottomRightFoliageRef.current.style.transform = `translate3d(${foliageParting * 0.8}px, ${-foliageDriftY * 0.1}px, 0)`;
+          }
 
-            // Throttle React HUD state updates cleanly (~12fps max) so DOM text stays responsive without thrashing
-            const now = performance.now();
-            if (now - lastHudSync > 80) {
-              lastHudSync = now;
-              setHudState({ atmosphere: atm, bearingDeg: rot });
-            }
-          },
+          // Throttle HUD update cleanly (~3fps) so React never blocks the scroll compositor
+          const now = performance.now();
+          if (now - lastHudSync > 320) {
+            lastHudSync = now;
+            setHudState({ atmosphere: atm, bearingDeg: bearingRef.current });
+          }
         },
       });
     }, canvasEl);
 
-    const totalPathLength =
-      typeof pathEl.getTotalLength === 'function' ? pathEl.getTotalLength() : trailGeometry.height;
-
-    // Velocity-locked physics & Euclidean wildlife proximity loop (60fps)
+    // 60fps / 120fps physics loop with deterministic Viewport-Center Lock
     const onTicker = (time) => {
       if (lenis) {
         lenis.raf(time * 1000);
       }
 
-      const p = progressRef.current;
-      let jeepX = trailGeometry.width * 0.5;
-      let jeepY = Math.max(80, p * trailGeometry.height);
-      if (typeof pathEl.getPointAtLength === 'function' && totalPathLength > 0) {
-        const pt = pathEl.getPointAtLength(p * totalPathLength);
-        jeepX = pt.x;
-        jeepY = pt.y;
+      // Compute exact canvas Y coordinate that aligns with 50% viewport center:
+      const canvasRect = canvasEl.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const targetViewportCenterY = vh * 0.5;
+
+      const targetTrailY = targetViewportCenterY - canvasRect.top;
+      const startTrailY = 60;
+      const endTrailY = Math.max(600, trailGeometry.height - 60);
+
+      // Clamped trail coordinate: aligns perfectly with 50% viewport whenever trail is in range
+      const clampedTrailY = Math.max(startTrailY, Math.min(endTrailY, targetTrailY));
+      const p = Math.max(0, Math.min(1, (clampedTrailY - startTrailY) / (endTrailY - startTrailY || 1)));
+      progressRef.current = p;
+
+      // Deterministic Road LUT query (0.001 ms, zero allocation)
+      const roadPoint = roadSampler.getPointAtY(clampedTrailY);
+      const jeepX = roadPoint.x;
+      const jeepY = clampedTrailY;
+      bearingRef.current = roadPoint.angle;
+
+      if (!prefersReducedMotion) {
+        jeepEl.style.transform = `translate3d(${jeepX - 48}px, ${jeepY - 29}px, 0) rotate(${roadPoint.angle}deg)`;
       }
 
       updateProximityFrame(
         {
           x: jeepX,
           y: jeepY,
-          headingDeg: bearingRef.current,
+          headingDeg: roadPoint.angle,
           progress: p,
           velocity: velocityRef.current,
         },
@@ -387,12 +403,17 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
       // Decay velocity smoothly when wheel stops
       velocityRef.current *= 0.9;
       const dyn = computeVelocityDynamics(velocityRef.current, p);
+      const underpass = computeUnderpassState(p, checkpointRatios);
 
       if (chassisRef.current) {
         chassisRef.current.setAttribute(
           'transform',
-          `translate(0, ${dyn.suspensionOffsetPx}) rotate(${dyn.suspensionTiltDeg}, 48, 29)`,
+          `translate(48, 29) scale(${underpass.scale}) translate(-48, -29) translate(0, ${dyn.suspensionOffsetPx}) rotate(${dyn.suspensionTiltDeg}, 48, 29)`,
         );
+      }
+
+      if (underpassShadowRef.current) {
+        underpassShadowRef.current.style.opacity = String(underpass.shadowOpacity);
       }
 
       wheelPhaseRef.current = (wheelPhaseRef.current + dyn.wheelSpinDeltaDeg * 0.08) % 6;
@@ -411,7 +432,7 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
     };
 
     gsap.ticker.add(onTicker);
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);
     ScrollTrigger.refresh();
 
     return () => {
@@ -646,7 +667,8 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
       <section
         ref={trailCanvasRef}
         aria-label="Scroll-driven jungle expedition trail"
-        className={`relative w-full overflow-hidden transition-colors duration-300 ${
+        style={{ minHeight: canvasMetrics.isMobile ? '480vh' : '560vh' }}
+        className={`relative w-full min-h-[480vh] sm:min-h-[560vh] overflow-hidden transition-colors duration-300 ${
           darkMode
             ? 'bg-gradient-to-b from-[#071A14] via-[#061611] to-[#040E0A]'
             : 'bg-gradient-to-b from-[#0B281F] via-[#092119] via-55% to-[#061610]'
@@ -700,7 +722,7 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
           checkpointSightings={proximityTelemetry.checkpointSightings}
         />
 
-        {/* Scroll-Locked Top-Down 4x4 Family Safari Jeep */}
+        {/* Scroll-Locked Top-Down 4x4 Family Safari Jeep (z-20) */}
         <SafariFamilyJeep
           refs={{
             containerRef: jeepContainerRef,
@@ -712,20 +734,21 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
             coPilotCameraRef,
             kidBinocularRef,
             kidPointerRef,
+            underpassShadowRef,
           }}
           forceHeadlights={darkMode}
         />
 
-        {/* Trailhead Quick Orientation Sign (offset cleanly beside road entry) */}
-        <div className="relative z-20 max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-8 flex justify-end md:justify-start md:pl-12">
+        {/* Trailhead Quick Orientation Sign (z-40) */}
+        <div className="relative z-40 max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-8 flex justify-end md:justify-start md:pl-12">
           <div className="inline-flex items-center gap-3 rounded-xl px-4 py-2 bg-[#0D2922]/90 text-[#F4EBDA] border border-[#C99A4A]/45 text-xs">
             <Compass className="w-3.5 h-3.5 text-[#C99A4A] shrink-0" />
             <span className="font-semibold">6 Reserve Stops · Dawn to Night Camp</span>
           </div>
         </div>
 
-        {/* 6 Winding Checkpoint Field Journal Cards */}
-        <div className="relative z-20 max-w-[1260px] mx-auto px-2 sm:px-6 lg:px-10 pt-4 pb-20 space-y-20 sm:space-y-28 lg:space-y-32">
+        {/* 6 Winding Checkpoint Field Journal Cards (z-40) */}
+        <div className="relative z-40 max-w-[1400px] w-full mx-auto px-2 sm:px-6 lg:px-10 pt-16 pb-36 space-y-[28vh] sm:space-y-[38vh] lg:space-y-[44vh]">
           {trailGeometry.checkpointCoords.slice(0, 3).map((cp) => {
             const safari = safariMap.get(cp.safariId);
             if (!safari) return null;
@@ -746,8 +769,8 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
             );
           })}
 
-          {/* Mid-Trail River Crossing Bank Sign (offset to bank so wooden bridge & splashes stay 100% unobstructed) */}
-          <div className="relative py-10 sm:py-14 flex justify-end md:justify-start pl-[21%] md:pl-12 pr-2 md:pr-0">
+          {/* Mid-Trail River Crossing Bank Sign (z-40) */}
+          <div className="relative z-40 py-10 sm:py-14 flex justify-end md:justify-start pl-[28%] md:pl-16 pr-2 md:pr-0">
             <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0B2A2C] text-[#E5F6F5] border border-[#56A8A6]/50 text-xs whitespace-nowrap">
               <Waves className="w-4 h-4 text-[#7CD6D3] shrink-0" />
               <span className="font-semibold">Ramganga Bridge</span>

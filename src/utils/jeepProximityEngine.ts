@@ -1,4 +1,4 @@
-import { clamp, lerp, type Point2D, type SnakeTrailGeometry } from './jungleTrailEngine';
+import { clamp, lerp, type Point2D, type SnakeTrailGeometry } from './jungleTrailEngine.ts';
 
 export type WildlifeSpeciesId =
   | 'bengal-tiger'
@@ -130,15 +130,15 @@ export function buildWildlifeHabitatAnchors(
     // On desktop, negative space sits opposite the card (`bendOuterX`); on mobile, in the open clearing above each card
     const outerClearancePx = Math.max(210, Math.round(width * 0.165));
     const bendOuterX = isMobile
-      ? Math.round(width * 0.42)
+      ? Math.round(width * (cp.index % 2 === 0 ? 0.16 : 0.84))
       : cp.bendSide === 'right'
         ? Math.min(width - 115, cp.x + outerClearancePx)
         : Math.max(115, cp.x - outerClearancePx);
 
-    const bendAnchorY = isMobile ? cp.y - 208 : cp.y - 12;
+    const bendAnchorY = isMobile ? cp.y - 190 : cp.y - 12;
 
     const cardMarginX = isMobile
-      ? Math.round(width * 0.84)
+      ? Math.round(width * (cp.index % 2 === 0 ? 0.84 : 0.16))
       : cp.cardSide === 'left'
         ? Math.round(width * 0.22)
         : Math.round(width * 0.78);
