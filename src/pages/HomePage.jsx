@@ -25,7 +25,6 @@ import {
 import {
   Calendar,
   Users,
-  ArrowRight,
   MapPin,
   ChevronDown,
   Check,
@@ -625,10 +624,9 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
               <div className="sm:col-span-3 pt-1 sm:pt-0">
                 <button
                   type="submit"
-                  className="w-full h-12 px-5 rounded-xl bg-[#C99A4A] hover:bg-[#D8AA5B] text-[#0D2922] font-bold text-sm flex items-center justify-center gap-2 transition-colors active:scale-[0.98] whitespace-nowrap shrink-0 cursor-pointer shadow-md"
+                  className="w-full h-12 px-5 rounded-xl bg-[#C99A4A] hover:bg-[#D8AA5B] text-[#0D2922] font-bold text-sm flex items-center justify-center transition-colors active:scale-[0.98] whitespace-nowrap shrink-0 cursor-pointer shadow-md"
                 >
                   <span>Check Gate Permits</span>
-                  <ArrowRight className="w-4 h-4 text-[#0D2922]" />
                 </button>
               </div>
             </form>
@@ -817,10 +815,9 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
                 <button
                   type="button"
                   onClick={() => onNavigate('finder')}
-                  className="px-6 py-3 rounded-xl bg-[#C99A4A] hover:bg-[#B88939] text-[#0D2922] font-bold text-sm inline-flex items-center gap-2 transition-colors active:scale-[0.98] whitespace-nowrap cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-[#C99A4A] hover:bg-[#B88939] text-[#0D2922] font-bold text-sm inline-flex items-center justify-center transition-colors active:scale-[0.98] whitespace-nowrap cursor-pointer"
                 >
-                  <span>Launch Safari Finder</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>Match My Safari Corridor</span>
                 </button>
 
                 <button

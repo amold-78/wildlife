@@ -212,10 +212,10 @@ export default function AuthModal() {
               )}
             </button>
 
-            {/* Quick Demo Login Bar */}
+            {/* Sample Registry Accounts */}
             <div className="pt-4 border-t border-[#E6DEC8] dark:border-[#1D4337] text-center">
               <span className="text-[11px] font-mono uppercase tracking-wider text-[#64776E] dark:text-[#7E9E91] block mb-2.5">
-                Instant 1-Click Demo Credentials
+                Pre-Registered NTCA Sandbox Accounts
               </span>
               <div className="grid grid-cols-2 gap-2.5">
                 <button
@@ -225,7 +225,7 @@ export default function AuthModal() {
                   className="px-3 py-2 text-xs font-semibold rounded-xl bg-[#EFE6D7] dark:bg-[#113127] hover:bg-[#E5D9C5] dark:hover:bg-[#173F35] text-[#0D2922] dark:text-[#F4EBDA] border border-[#D8CEBE] dark:border-[#265244] transition flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Compass className="w-3.5 h-3.5 text-[#C99A4A]" />
-                  <span>Demo Traveler</span>
+                  <span>Guest Pass (Sahil)</span>
                 </button>
                 <button
                   type="button"
@@ -234,7 +234,7 @@ export default function AuthModal() {
                   className="px-3 py-2 text-xs font-semibold rounded-xl bg-[#C99A4A]/15 hover:bg-[#C99A4A]/25 text-[#6E4D14] dark:text-[#E4B865] border border-[#C99A4A]/45 transition flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Shield className="w-3.5 h-3.5 text-[#C99A4A]" />
-                  <span>Ranger Admin</span>
+                  <span>Warden Desk</span>
                 </button>
               </div>
             </div>

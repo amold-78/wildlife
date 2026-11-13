@@ -5,7 +5,6 @@ import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import Toast from './components/common/Toast';
 import AuthModal from './components/auth/AuthModal';
-import AskRangerModal from './components/ranger-ai/AskRangerModal';
 
 import HomePage from './pages/HomePage';
 import ExplorePage from './pages/ExplorePage';
@@ -41,7 +40,7 @@ export default function App() {
   };
 
   const handleBookingCompleted = (_bookingId) => {
-    setActivePage('profile'); // Send directly to profile gate pass page on complete!
+    setActivePage('profile');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -127,12 +126,6 @@ export default function App() {
 
           {/* Global Footer */}
           <Footer onNavigate={navigateTo} onSelectSafari={handleSelectSafari} />
-
-          {/* Global Floating Ranger AI Naturalist Drawer */}
-          <AskRangerModal
-            onSelectSafari={handleSelectSafari}
-            onNavigate={navigateTo}
-          />
 
           {/* Global Authentication Modal */}
           <AuthModal />

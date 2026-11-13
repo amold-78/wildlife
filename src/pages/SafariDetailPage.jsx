@@ -10,7 +10,6 @@ import {
   Shield,
   Heart,
   Share2,
-  ArrowRight,
   CheckCircle2,
   Thermometer,
   Eye,
@@ -1026,10 +1025,9 @@ export default function SafariDetailPage({ safariId, onBookSlot, onBack }) {
             <button
               type="button"
               onClick={() => onBookSlot(safari.id, selectedSlot)}
-              className="w-full py-4 rounded-xl bg-[#C99A4A] hover:bg-[#D8AA5B] text-[#0D2922] font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition cursor-pointer"
+              className="w-full py-4 rounded-xl bg-[#C99A4A] hover:bg-[#D8AA5B] text-[#0D2922] font-bold text-sm flex items-center justify-center shadow-lg transition cursor-pointer"
             >
               <span>Proceed to Permit Booking</span>
-              <ArrowRight className="w-4 h-4 text-[#0D2922]" />
             </button>
 
             <div className="text-xs text-stone-500 dark:text-[#9AB3A8] space-y-1.5 pt-1">

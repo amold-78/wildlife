@@ -109,12 +109,12 @@ export default function UserProfilePage({ onNavigate }) {
               type="button"
               onClick={async () => {
                 await quickDemoLogin('user');
-                showToast('Signed in as Demo Traveler (Sahil Verma)', 'success');
+                showToast('Loaded Guest Permit Registry (Sahil Verma)', 'success');
               }}
               className="w-full py-2.5 px-4 bg-[#113127] hover:bg-[#173F35] border border-[#265244] text-[#F4EBDA] text-xs font-semibold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <Compass className="w-4 h-4 text-[#E4B865]" />
-              <span>1-Click Demo Traveler Login</span>
+              <span>Load Sample Permit Holder (Sahil Verma)</span>
             </button>
           </div>
         </div>

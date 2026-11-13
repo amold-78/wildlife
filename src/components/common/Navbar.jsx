@@ -13,7 +13,6 @@ import {
   ChevronDown,
   Ticket,
   Compass,
-  ArrowUpRight,
 } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage }) {
@@ -266,14 +265,13 @@ export default function Navbar({ activePage, setActivePage }) {
             </button>
           )}
 
-          {/* Primary Action CTA: Field Brass Gold */}
+          {/* Primary Action CTA: Direct Permit Reservation */}
           <button
             type="button"
-            onClick={() => handleNavClick('explore')}
-            className="px-4 py-2 rounded-xl bg-[#C99A4A] hover:bg-[#B88939] text-[#0D2922] text-xs font-bold inline-flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E4B865]"
+            onClick={() => handleNavClick('booking')}
+            className="px-4 py-2 rounded-xl bg-[#C99A4A] hover:bg-[#B88939] text-[#0D2922] text-xs font-bold inline-flex items-center justify-center transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E4B865]"
           >
-            <span>Book Safari</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <span>Reserve Permit</span>
           </button>
         </div>
 
@@ -378,12 +376,12 @@ export default function Navbar({ activePage, setActivePage }) {
                 <button
                   type="button"
                   onClick={() => {
-                    handleNavClick('explore');
+                    handleNavClick('booking');
                     setMobileMenuOpen(false);
                   }}
                   className="py-2.5 px-3 bg-[#C99A4A] text-[#0D2922] font-bold text-xs rounded-xl text-center"
                 >
-                  Book Safari
+                  Reserve Permit
                 </button>
               </div>
             )}

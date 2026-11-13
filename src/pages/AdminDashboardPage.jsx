@@ -94,11 +94,11 @@ export default function AdminDashboardPage({ onNavigate }) {
               type="button"
               onClick={async () => {
                 await quickDemoLogin('admin');
-                showToast('Authorized as Ranger Admin (NTCA Chief Warden)', 'success');
+                showToast('Authorized as Chief Warden (NTCA Gate Desk)', 'success');
               }}
               className="w-full py-3 px-4 bg-[#C99A4A] hover:bg-[#D8AA5B] font-bold text-[#0D2922] rounded-xl transition shadow-md flex items-center justify-center gap-2 cursor-pointer text-sm"
             >
-              <Shield className="w-4 h-4" /> 1-Click Login as Ranger Admin
+              <Shield className="w-4 h-4" /> Enter Chief Warden Gate Terminal
             </button>
             <button
               type="button"

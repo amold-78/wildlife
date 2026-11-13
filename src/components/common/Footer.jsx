@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-  Shield,
-  Leaf,
-  HeartHandshake,
   Award,
   Trash2,
   VolumeX,
@@ -22,55 +19,6 @@ export default function Footer({ onNavigate, onSelectSafari }) {
 
   return (
     <footer className="bg-[#09211A] text-[#E9DFC9] border-t border-[#265244]">
-      {/* Responsible Tourism Banner */}
-      <div className="border-b border-[#1D4337] bg-[#071A14]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[#113127] border border-[#265244] text-[#C99A4A] shrink-0">
-                <Leaf className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-serif text-lg text-[#F8F3E8] font-bold">
-                  100% Eco-Certified Operators
-                </h4>
-                <p className="text-xs text-[#C8D8D0] mt-1 leading-relaxed">
-                  Every safari booking complies strictly with National Tiger Conservation Authority (NTCA) carrying capacity limits.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[#113127] border border-[#265244] text-[#C99A4A] shrink-0">
-                <Shield className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-serif text-lg text-[#F8F3E8] font-bold">
-                  Official Gate Permits
-                </h4>
-                <p className="text-xs text-[#C8D8D0] mt-1 leading-relaxed">
-                  Real forest department entry vouchers issued directly to your name with zero middleman markup.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[#113127] border border-[#265244] text-[#C99A4A] shrink-0">
-                <HeartHandshake className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-serif text-lg text-[#F8F3E8] font-bold">
-                  Local Community Support
-                </h4>
-                <p className="text-xs text-[#C8D8D0] mt-1 leading-relaxed">
-                  ₹150 from each booking directly funds tribal forest guide welfare and anti-poaching patrol equipment.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
