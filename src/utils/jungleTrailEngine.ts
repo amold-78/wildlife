@@ -183,9 +183,10 @@ export function buildResponsiveSnakeTrail(params: {
       : defaultRatios.map((r) => Math.round(safeHeight * r));
 
   // Anchor coordinates along the S-curve: centered at 50% width
+  // Road begins inside the trailhead cavern chamber (-36px) so it recedes into deep darkness
   const startPoint: Point2D = {
     x: Math.round(safeWidth * 0.5),
-    y: 0,
+    y: -36,
   };
 
   const checkpointAnchors: Point2D[] = TRAIL_CHECKPOINTS.map((cp, idx) => {
@@ -567,6 +568,9 @@ export function computeUnderpassState(
 ): UnderpassState {
   const p = clamp(progress, 0, 1);
 
+  // 0. Trailhead Cavern mouth: Jeep emerges from cave darkness into daylight (progress = 0..0.045)
+  const trailheadCaveFactor = (1 - smoothstep(0.006, 0.044, p)) * 0.95;
+
   // 1. Center Ramganga Canyon rock cave & canopy bridge overpass
   const bridgeFactor =
     smoothstep(0.44, 0.49, p) * (1 - smoothstep(0.53, 0.58, p));
@@ -586,7 +590,7 @@ export function computeUnderpassState(
   }
 
   const underpassFactor = Number(
-    Math.max(bridgeFactor, cardOverpassFactor * 0.92).toFixed(3),
+    Math.max(trailheadCaveFactor, bridgeFactor, cardOverpassFactor * 0.92).toFixed(3),
   );
   const isUnderpass = underpassFactor > 0.15;
   const scale = Number((1.0 - underpassFactor * 0.08).toFixed(3)); // 1.0 -> 0.92

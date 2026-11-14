@@ -8,7 +8,6 @@ import AuthModal from './components/auth/AuthModal';
 
 import HomePage from './pages/HomePage';
 import ExplorePage from './pages/ExplorePage';
-import SafariFinderPage from './pages/SafariFinderPage';
 import SafariDetailPage from './pages/SafariDetailPage';
 import BookingFlowPage from './pages/BookingFlowPage';
 import MySafariPage from './pages/MySafariPage';
@@ -67,13 +66,6 @@ export default function App() {
 
             {activePage === 'explore' && (
               <ExplorePage
-                onSelectSafari={handleSelectSafari}
-                onNavigate={navigateTo}
-              />
-            )}
-
-            {activePage === 'finder' && (
-              <SafariFinderPage
                 onSelectSafari={handleSelectSafari}
                 onNavigate={navigateTo}
               />

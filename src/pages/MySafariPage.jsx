@@ -42,7 +42,7 @@ export default function MySafariPage({ onExploreMore }) {
             No Active Safari Permits Yet
           </h2>
           <p className="text-xs sm:text-sm text-[#43564E] dark:text-[#B8CEC4] max-w-md mx-auto leading-relaxed">
-            You have not reserved any jungle expeditions yet. Browse our six certified reserves or launch the Safari Finder to secure your official gate pass.
+            You have not reserved any jungle expeditions yet. Browse our six certified reserves to secure your official gate pass.
           </p>
           <button
             type="button"

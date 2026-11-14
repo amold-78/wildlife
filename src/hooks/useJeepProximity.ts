@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { SnakeTrailGeometry } from '../utils/jungleTrailEngine';
+import type { WildlifeCanvasController } from '../components/jungle/wildlife/wildlifeTypes';
 import {
   buildWildlifeHabitatAnchors,
   evaluateProximityEcosystem,
@@ -19,6 +20,7 @@ export interface UseJeepProximityReturn {
   registerAnimalNode: (id: string) => (node: HTMLElement | null) => void;
   registerParticleNode: (id: string) => (node: HTMLElement | null) => void;
   registerGlowNode: (id: string) => (node: HTMLElement | null) => void;
+  registerAnimalController: (id: string) => (controller: WildlifeCanvasController | null) => void;
   updateProximityFrame: (jeep: JeepPose, timeSec: number, reducedMotion: boolean) => void;
   telemetry: {
     nearestAnimal: ProximityFrameSnapshot['nearestAnimal'];
@@ -40,6 +42,7 @@ export function useJeepProximity(
   const animalNodesRef = useRef<Record<string, HTMLElement | null>>({});
   const particleNodesRef = useRef<Record<string, HTMLElement | null>>({});
   const glowNodesRef = useRef<Record<string, HTMLElement | null>>({});
+  const animalControllersRef = useRef<Record<string, WildlifeCanvasController | null>>({});
   const lastTelemetrySyncRef = useRef<number>(0);
 
   const [telemetry, setTelemetry] = useState<UseJeepProximityReturn['telemetry']>(() => {
@@ -68,6 +71,17 @@ export function useJeepProximity(
     [],
   );
 
+  const registerAnimalController = useCallback(
+    (id: string) => (controller: WildlifeCanvasController | null) => {
+      if (controller) {
+        animalControllersRef.current[id] = controller;
+      } else {
+        delete animalControllersRef.current[id];
+      }
+    },
+    [],
+  );
+
   const registerParticleNode = useCallback(
     (id: string) => (node: HTMLElement | null) => {
       particleNodesRef.current[id] = node;
@@ -86,8 +100,23 @@ export function useJeepProximity(
     (jeep: JeepPose, timeSec: number, reducedMotion: boolean) => {
       const snapshot = evaluateProximityEcosystem(anchors, jeep, timeSec, reducedMotion);
 
-      // Mutate wildlife character DOM nodes directly at 60fps
+      // Mutate wildlife character DOM nodes and notify procedural canvas controllers directly at 60fps
+      const isStopped = Math.abs(jeep.velocity) < 0.05;
+
       for (const state of snapshot.animals) {
+        const isAtStop = state.proximityFactor > 0.36 && isStopped;
+        const ctrl = animalControllersRef.current[state.id];
+        if (ctrl) {
+          ctrl.onJeepUpdate({
+            proximityFactor: state.proximityFactor,
+            phase: state.phase,
+            distancePx: state.distancePx,
+            velocity: jeep.velocity,
+            isStopped,
+            isAtStop,
+          });
+        }
+
         const el = animalNodesRef.current[state.id];
         if (el) {
           el.style.transform = `translate3d(${state.offsetX}px, ${state.offsetY}px, 0) rotate(${state.rotationDeg}deg) scale(${state.scale})`;
@@ -156,6 +185,7 @@ export function useJeepProximity(
     registerAnimalNode,
     registerParticleNode,
     registerGlowNode,
+    registerAnimalController,
     updateProximityFrame,
     telemetry,
   };

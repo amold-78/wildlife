@@ -139,10 +139,10 @@ export default function Footer({ onNavigate, onSelectSafari }) {
               <li>
                 <button
                   type="button"
-                  onClick={() => onNavigate('finder')}
+                  onClick={() => onNavigate('explore')}
                   className="hover:text-[#E4B865] transition cursor-pointer"
                 >
-                  Smart Safari Recommendation Quiz
+                  Explore All Reserves &amp; Zones
                 </button>
               </li>
               <li>

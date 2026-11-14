@@ -58,6 +58,6 @@ export function getRangerReply(query) {
 
   return {
     title: "WildTrail Ranger Briefing",
-    text: `Thanks for asking! Our official naturalist recommendation is to book morning slots for predator activity and check that your government ID matches your booking pass. Feel free to explore our Safari Finder or ask about specific parks like Tadoba, Pench, Ranthambore, or Corbett.`
+    text: `Thanks for asking! Our official naturalist recommendation is to book morning slots for predator activity and check that your government ID matches your booking pass. Feel free to explore our reserve catalog or ask about specific parks like Tadoba, Pench, Ranthambore, or Corbett.`
   };
 }
