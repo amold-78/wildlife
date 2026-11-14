@@ -382,25 +382,28 @@ export function evaluateWildlifeKinematics(
   switch (anchor.species) {
     case 'bengal-tiger':
     case 'canopy-leopard': {
-      // State 1 (Idle): Slow stealthy pacing behind tall grass
-      // State 2 (Alert): Emerges from negative space, walks parallel along the road curve tracking the Jeep, pauses beside card
-      // State 3 (Settle): Rests on the ridge watching the trail
+      // State 1 (Idle): Prowling stealthily in natural clearing
+      // State 2 (Alert/Near Car): Approaches boldly from the clearing to the road verge near the Jeep!
+      // State 3 (Settle): Returns to resting ridge watching the trail
       if (phase === 'idle') {
         offsetX = Math.sin(timeSec * 1.4 + anchor.checkpointIndex) * 10;
         offsetY = Math.cos(timeSec * 0.9) * 3;
         rotationDeg = Math.sin(timeSec * 1.4) * 3;
       } else if (phase === 'alert') {
-        // Step slightly toward the road bend while staying in the outer clearing
-        const stepInward = -dirSign * lerp(0, 18, proximityFactor);
-        const trackY = clamp((jeep.y - anchor.anchorY) * 0.28, -32, 36);
-        offsetX = stepInward;
-        offsetY = trackY;
-        rotationDeg = clamp((jeep.y - anchor.anchorY) * 0.06 * dirSign, -10, 10);
-        scale = Number(lerp(1, 1.08, proximityFactor).toFixed(3));
+        // Smoothly approach from the habitat clearing to stand right beside the Jeep on the road verge
+        const targetSideDist = anchor.side === 'right' ? 88 : -88;
+        const targetApproachX = (jeep.x + targetSideDist) - anchor.anchorX;
+        const targetApproachY = (jeep.y + 4) - anchor.anchorY;
+        const approachT = smoothstep(0.12, 0.78, proximityFactor);
+
+        offsetX = targetApproachX * approachT;
+        offsetY = targetApproachY * approachT;
+        rotationDeg = clamp((jeep.y - anchor.anchorY) * 0.04 * dirSign, -8, 8);
+        scale = Number(lerp(1, 1.10, approachT).toFixed(3));
         foliageShakeDeg = Number((Math.sin(timeSec * 9) * 4 * proximityFactor).toFixed(2));
       } else {
-        offsetX = -dirSign * 10;
-        offsetY = 18;
+        offsetX = -dirSign * 16;
+        offsetY = 12;
         rotationDeg = 0;
         scale = 1.02;
       }
@@ -409,23 +412,27 @@ export function evaluateWildlifeKinematics(
 
     case 'spotted-deer': {
       // State 1 (Idle): Grazing gently in margin
-      // State 2 (Alert): Lifts head, startles, and bounds laterally into deeper foliage away from the road
+      // State 2 (Alert/Near Car): Approaches inquisitive toward roadside margin, stamps and watches car
       // State 3 (Settle): Sheltered in deep fern margin
       if (phase === 'idle') {
         offsetX = Math.sin(timeSec * 1.1) * 4;
         offsetY = Math.abs(Math.sin(timeSec * 1.8)) * 3;
       } else if (phase === 'alert') {
-        const boundProgress = smoothstep(0.12, 0.88, proximityFactor);
-        offsetX = dirSign * lerp(0, 44, boundProgress);
-        offsetY = -Math.sin(boundProgress * Math.PI) * 24 - boundProgress * 10;
-        rotationDeg = dirSign * Math.sin(boundProgress * Math.PI) * -14;
-        scale = Number(lerp(1, 1.06, proximityFactor).toFixed(3));
+        const targetSideDist = anchor.side === 'right' ? 96 : -96;
+        const targetApproachX = (jeep.x + targetSideDist) - anchor.anchorX;
+        const targetApproachY = (jeep.y + 8) - anchor.anchorY;
+        const approachT = smoothstep(0.12, 0.80, proximityFactor);
+
+        offsetX = targetApproachX * approachT;
+        offsetY = targetApproachY * approachT;
+        rotationDeg = dirSign * Math.sin(approachT * Math.PI) * -8;
+        scale = Number(lerp(1, 1.08, approachT).toFixed(3));
         particleIntensity = Number(proximityFactor.toFixed(3));
-        foliageShakeDeg = Number((Math.sin(timeSec * 14) * 7 * proximityFactor).toFixed(2));
+        foliageShakeDeg = Number((Math.sin(timeSec * 14) * 5 * proximityFactor).toFixed(2));
       } else {
-        offsetX = dirSign * 34;
-        offsetY = -8;
-        scale = 0.96;
+        offsetX = dirSign * 24;
+        offsetY = -6;
+        scale = 0.98;
       }
       break;
     }
@@ -476,19 +483,24 @@ export function evaluateWildlifeKinematics(
 
     case 'river-elephant': {
       // State 1 (Idle): Wading calmly in East Ramganga shallows
-      // State 2 (Alert): Wades along the river channel and sprays water mist arc
+      // State 2 (Alert/Near Car): Strides majestically from river shallows toward the bridge beside the Jeep!
       // State 3 (Settle): Bathing peacefully in river current
       if (phase === 'idle') {
         offsetX = Math.sin(timeSec * 0.9) * 5;
         offsetY = Math.cos(timeSec * 1.2) * 2.5;
       } else if (phase === 'alert') {
-        offsetX = -dirSign * lerp(0, 18, proximityFactor);
-        offsetY = lerp(0, -10, proximityFactor);
-        rotationDeg = -dirSign * lerp(0, 5, proximityFactor);
-        scale = Number(lerp(1, 1.08, proximityFactor).toFixed(3));
+        const targetSideDist = anchor.side === 'right' ? 98 : -98;
+        const targetApproachX = (jeep.x + targetSideDist) - anchor.anchorX;
+        const targetApproachY = (jeep.y + 6) - anchor.anchorY;
+        const approachT = smoothstep(0.12, 0.78, proximityFactor);
+
+        offsetX = targetApproachX * approachT;
+        offsetY = targetApproachY * approachT;
+        rotationDeg = -dirSign * lerp(0, 4, approachT);
+        scale = Number(lerp(1, 1.10, approachT).toFixed(3));
         particleIntensity = Number(clamp(proximityFactor * 1.25, 0, 1).toFixed(3));
       } else {
-        offsetX = -dirSign * 10;
+        offsetX = -dirSign * 14;
         offsetY = -4;
       }
       break;
@@ -496,18 +508,23 @@ export function evaluateWildlifeKinematics(
 
     case 'one-horned-rhino': {
       // State 1 (Idle): Grazing tall Kaziranga elephant grass
-      // State 2 (Alert): Lifts armored head and steps into Jeep headlight glow in outer clearing
+      // State 2 (Alert/Near Car): Marches out of the tall grass to the road verge right beside the Jeep!
       // State 3 (Settle): Watching quietly beside twilight camp pool
       if (phase === 'idle') {
         offsetX = Math.sin(timeSec * 0.8) * 4;
       } else if (phase === 'alert') {
-        offsetX = -dirSign * lerp(0, 16, proximityFactor);
-        offsetY = lerp(0, -8, proximityFactor);
-        rotationDeg = -dirSign * lerp(0, 5, proximityFactor);
-        scale = Number(lerp(1, 1.08, proximityFactor).toFixed(3));
+        const targetSideDist = anchor.side === 'right' ? 92 : -92;
+        const targetApproachX = (jeep.x + targetSideDist) - anchor.anchorX;
+        const targetApproachY = (jeep.y + 4) - anchor.anchorY;
+        const approachT = smoothstep(0.12, 0.78, proximityFactor);
+
+        offsetX = targetApproachX * approachT;
+        offsetY = targetApproachY * approachT;
+        rotationDeg = -dirSign * lerp(0, 4, approachT);
+        scale = Number(lerp(1, 1.10, approachT).toFixed(3));
         foliageShakeDeg = Number((Math.sin(timeSec * 10) * 5 * proximityFactor).toFixed(2));
       } else {
-        offsetX = -dirSign * 10;
+        offsetX = -dirSign * 14;
       }
       break;
     }

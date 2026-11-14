@@ -249,6 +249,7 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
     registerAnimalNode,
     registerParticleNode,
     registerGlowNode,
+    registerAnimalController,
     updateProximityFrame,
     telemetry: proximityTelemetry,
   } = useJeepProximity(trailGeometry, passengerRefs);
@@ -368,7 +369,7 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
       const targetViewportCenterY = vh * 0.5;
 
       const targetTrailY = targetViewportCenterY - canvasRect.top;
-      const startTrailY = 60;
+      const startTrailY = 54;
       const endTrailY = Math.max(600, trailGeometry.height - 60);
 
       // Clamped trail coordinate: aligns perfectly with 50% viewport whenever trail is in range
@@ -668,7 +669,7 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
         ref={trailCanvasRef}
         aria-label="Scroll-driven jungle expedition trail"
         style={{ minHeight: canvasMetrics.isMobile ? '480vh' : '560vh' }}
-        className={`relative w-full min-h-[480vh] sm:min-h-[560vh] overflow-hidden transition-colors duration-300 ${
+        className={`relative w-full min-h-[480vh] sm:min-h-[560vh] overflow-x-clip transition-colors duration-300 ${
           darkMode
             ? 'bg-gradient-to-b from-[#071A14] via-[#061611] to-[#040E0A]'
             : 'bg-gradient-to-b from-[#0B281F] via-[#092119] via-55% to-[#061610]'
@@ -719,6 +720,7 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
           registerAnimalNode={registerAnimalNode}
           registerParticleNode={registerParticleNode}
           registerGlowNode={registerGlowNode}
+          registerAnimalController={registerAnimalController}
           checkpointSightings={proximityTelemetry.checkpointSightings}
         />
 
@@ -828,19 +830,19 @@ export default function HomePage({ onSelectSafari, onNavigate }) {
 
             <div className="lg:col-span-6 space-y-5">
               <h2 className="font-serif [text-wrap:balance] text-3xl sm:text-4xl font-bold text-white leading-tight">
-                Match your family to the ideal tiger corridor.
+                Plan your family&apos;s ideal tiger expedition.
               </h2>
               <p className="text-sm sm:text-base text-[#C8D8D0] leading-relaxed">
-                Unsure which gate fits your season or children&apos;s pace? Use the Safari Finder to cross-reference waterhole sighting indices, monsoon windows, and full-Gypsy permit fares.
+                Cross-reference seasonal waterhole sighting indices, monsoon windows, and official full-Gypsy permit fares across all six national parks.
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-1">
                 <button
                   type="button"
-                  onClick={() => onNavigate('finder')}
+                  onClick={() => onNavigate('explore')}
                   className="px-6 py-3 rounded-xl bg-[#C99A4A] hover:bg-[#B88939] text-[#0D2922] font-bold text-sm inline-flex items-center justify-center transition-colors active:scale-[0.98] whitespace-nowrap cursor-pointer"
                 >
-                  <span>Match My Safari Corridor</span>
+                  <span>Explore Safari Reserves</span>
                 </button>
 
                 <button

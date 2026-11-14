@@ -25,7 +25,6 @@ export default function Navbar({ activePage, setActivePage }) {
 
   const navLinks = [
     { id: 'explore', label: 'Explore Reserves' },
-    { id: 'finder', label: 'Safari Finder' },
     { id: 'wildlife', label: 'Wildlife Guide' },
   ];
 

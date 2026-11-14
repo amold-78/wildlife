@@ -39,6 +39,9 @@ export default function ParallaxJungleLayers({
   const roadBermWidth = isMobile ? 24 : 36;
   const rutOffset = isMobile ? 3.5 : 5;
   const isNight = atmospherePhase === 'night-camp';
+  const trailHeadX = Math.round(width * 0.5);
+  const caveHalfWidth = isMobile ? 38 : 54;
+  const cliffSpan = isMobile ? Math.max(160, width * 0.5) : Math.max(280, Math.min(460, width * 0.38));
 
   // Generate organic topographic elevation contours etched into the dark emerald reserve
   const contourBands = [
@@ -173,7 +176,70 @@ export default function ParallaxJungleLayers({
             <stop offset="50%" stopColor="#BE7E4E" />
             <stop offset="100%" stopColor="#8F552E" />
           </linearGradient>
+          <radialGradient
+            id="cavernVoidUnderGrad"
+            cx="50%"
+            cy="25%"
+            r="60%"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#010403" stopOpacity="1" />
+            <stop offset="50%" stopColor="#030A07" stopOpacity="0.96" />
+            <stop offset="85%" stopColor="#081810" stopOpacity="0.88" />
+            <stop offset="100%" stopColor="#0D241A" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="cavernWallBaseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#0A1610" />
+            <stop offset="60%" stopColor="#14241B" />
+            <stop offset="100%" stopColor="#1D3326" />
+          </linearGradient>
         </defs>
+
+        {/* TRAILHEAD CAVERN FLOOR (PLANE 2: UNDER-JEEP INTERIOR VOID & BEDROCK FOUNDATION) */}
+        <g id="trailhead-cavern-interior-plane2">
+          {/* Deep Cavern Interior Chamber Silhouette (behind road and under Jeep) */}
+          <path
+            d={`M ${trailHeadX - caveHalfWidth - 18} -45
+               Q ${trailHeadX - caveHalfWidth - 6} 20 ${trailHeadX - caveHalfWidth - 2} 55
+               Q ${trailHeadX} 68 ${trailHeadX + caveHalfWidth + 2} 55
+               Q ${trailHeadX + caveHalfWidth + 6} 20 ${trailHeadX + caveHalfWidth + 18} -45
+               Z`}
+            fill="#020704"
+          />
+          <ellipse
+            cx={trailHeadX}
+            cy={18}
+            rx={caveHalfWidth + 20}
+            ry={48}
+            fill="url(#cavernVoidUnderGrad)"
+          />
+
+          {/* Left Bedrock Floor Footing */}
+          <path
+            d={`M ${trailHeadX - caveHalfWidth - 2} 50
+               C ${trailHeadX - caveHalfWidth - 20} 58, ${trailHeadX - caveHalfWidth - 48} 62, ${trailHeadX - cliffSpan} 48
+               L ${trailHeadX - cliffSpan} -45
+               L ${trailHeadX - caveHalfWidth - 18} -45
+               Q ${trailHeadX - caveHalfWidth - 6} 15 ${trailHeadX - caveHalfWidth - 2} 50
+               Z`}
+            fill="url(#cavernWallBaseGrad)"
+            stroke="#08140E"
+            strokeWidth="1.2"
+          />
+
+          {/* Right Bedrock Floor Footing */}
+          <path
+            d={`M ${trailHeadX + caveHalfWidth + 2} 50
+               C ${trailHeadX + caveHalfWidth + 20} 58, ${trailHeadX + caveHalfWidth + 48} 62, ${trailHeadX + cliffSpan} 48
+               L ${trailHeadX + cliffSpan} -45
+               L ${trailHeadX + caveHalfWidth + 18} -45
+               Q ${trailHeadX + caveHalfWidth + 6} 15 ${trailHeadX + caveHalfWidth + 2} 50
+               Z`}
+            fill="url(#cavernWallBaseGrad)"
+            stroke="#08140E"
+            strokeWidth="1.2"
+          />
+        </g>
 
         {/* Shallow River Crossing Flowing Under the Timber Bridge */}
         <g>
@@ -265,6 +331,16 @@ export default function ParallaxJungleLayers({
           strokeWidth={isMobile ? 2.2 : 3.8}
           strokeDasharray="10 14"
           strokeLinecap="round"
+        />
+
+        {/* Cavern Ground Shading over roadbed inside cave */}
+        <rect
+          x={trailHeadX - caveHalfWidth}
+          y="-45"
+          width={caveHalfWidth * 2}
+          height="80"
+          fill="#010604"
+          fillOpacity="0.52"
         />
 
         {/* Slatted Wooden Bridge Span over Ramganga River */}
@@ -395,7 +471,289 @@ export default function ParallaxJungleLayers({
             <stop offset="45%" stopColor="#2A3D34" />
             <stop offset="100%" stopColor="#15221C" />
           </linearGradient>
+          {/* Trailhead Cavern Gradients */}
+          <radialGradient
+            id="trailheadCaveMultiplyShadow"
+            cx="50%"
+            cy="25%"
+            r="65%"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="#010503" stopOpacity="0.94" />
+            <stop offset="45%" stopColor="#030E08" stopOpacity="0.78" />
+            <stop offset="78%" stopColor="#081C12" stopOpacity="0.38" />
+            <stop offset="100%" stopColor="#081C12" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="cliffRockGradLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#1B2B22" />
+            <stop offset="42%" stopColor="#253A2E" />
+            <stop offset="78%" stopColor="#17271E" />
+            <stop offset="100%" stopColor="#0F1B14" />
+          </linearGradient>
+          <linearGradient id="cliffRockGradRight" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#1C2D24" />
+            <stop offset="45%" stopColor="#273C30" />
+            <stop offset="80%" stopColor="#192A20" />
+            <stop offset="100%" stopColor="#101C15" />
+          </linearGradient>
+          <linearGradient id="caveArchSpanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#192820" />
+            <stop offset="35%" stopColor="#263A2F" />
+            <stop offset="75%" stopColor="#32493C" />
+            <stop offset="100%" stopColor="#16231B" />
+          </linearGradient>
+          <linearGradient id="stalactiteCalciteGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#1B2820" />
+            <stop offset="72%" stopColor="#3A5243" />
+            <stop offset="100%" stopColor="#D9C7A1" />
+          </linearGradient>
+          <linearGradient id="rockHighlightRim" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#5E836D" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#3E5C4A" stopOpacity="0.1" />
+          </linearGradient>
         </defs>
+
+        {/* TRAILHEAD CAVERN ENTRANCE (PLANE 2.5: OVER-JEEP ROCK ARCH, STALACTITES & AMBIENT SHADOW) */}
+        <g id="trailhead-cavern-overpass-plane25">
+          {/* 1. Deep Cavern Portal Multiply Shadow Mask (z-30 over Jeep chassis at z-20) */}
+          <ellipse
+            cx={trailHeadX}
+            cy={isMobile ? 32 : 40}
+            rx={isMobile ? 54 : 76}
+            ry={isMobile ? 44 : 58}
+            fill="url(#trailheadCaveMultiplyShadow)"
+            style={{ mixBlendMode: 'multiply' }}
+          />
+
+          {/* 2. Left Cliff Mountain Mass (Layered Rugged Rock Strata) */}
+          {/* Base mass */}
+          <path
+            d={`M ${trailHeadX - cliffSpan} -45
+               L ${trailHeadX - caveHalfWidth - 18} -45
+               Q ${trailHeadX - caveHalfWidth - 10} 12 ${trailHeadX - caveHalfWidth - 4} 42
+               L ${trailHeadX - caveHalfWidth - 14} 54
+               Q ${trailHeadX - caveHalfWidth - 36} 66 ${trailHeadX - cliffSpan * 0.52} 58
+               Q ${trailHeadX - cliffSpan * 0.78} 68 ${trailHeadX - cliffSpan} 54
+               Z`}
+            fill="url(#cliffRockGradLeft)"
+            stroke="#0D1913"
+            strokeWidth="1.8"
+          />
+          {/* Left Intermediate Rock Shelf / Facet */}
+          <path
+            d={`M ${trailHeadX - cliffSpan * 0.85} -25
+               L ${trailHeadX - caveHalfWidth - 28} -18
+               L ${trailHeadX - caveHalfWidth - 16} 28
+               L ${trailHeadX - caveHalfWidth - 42} 48
+               L ${trailHeadX - cliffSpan * 0.72} 42
+               Z`}
+            fill="#1E3026"
+            stroke="#101C16"
+            strokeWidth="1.2"
+          />
+          {/* Left Rock Sunlit Rim Highlight */}
+          <path
+            d={`M ${trailHeadX - cliffSpan} 54
+               Q ${trailHeadX - cliffSpan * 0.78} 68 ${trailHeadX - cliffSpan * 0.52} 58
+               Q ${trailHeadX - caveHalfWidth - 36} 66 ${trailHeadX - caveHalfWidth - 14} 54
+               L ${trailHeadX - caveHalfWidth - 4} 42`}
+            fill="none"
+            stroke="url(#rockHighlightRim)"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          />
+          {/* Left Rock Crevice Fissure */}
+          <path
+            d={`M ${trailHeadX - caveHalfWidth - 26} 12
+               L ${trailHeadX - caveHalfWidth - 48} 28
+               L ${trailHeadX - caveHalfWidth - 62} 48`}
+            fill="none"
+            stroke="#08100C"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+
+          {/* 3. Right Cliff Mountain Mass (Layered Rugged Rock Strata) */}
+          {/* Base mass */}
+          <path
+            d={`M ${trailHeadX + cliffSpan} -45
+               L ${trailHeadX + caveHalfWidth + 18} -45
+               Q ${trailHeadX + caveHalfWidth + 10} 12 ${trailHeadX + caveHalfWidth + 4} 42
+               L ${trailHeadX + caveHalfWidth + 14} 54
+               Q ${trailHeadX + caveHalfWidth + 36} 66 ${trailHeadX + cliffSpan * 0.52} 58
+               Q ${trailHeadX + cliffSpan * 0.78} 68 ${trailHeadX + cliffSpan} 54
+               Z`}
+            fill="url(#cliffRockGradRight)"
+            stroke="#0D1913"
+            strokeWidth="1.8"
+          />
+          {/* Right Intermediate Rock Shelf */}
+          <path
+            d={`M ${trailHeadX + cliffSpan * 0.85} -25
+               L ${trailHeadX + caveHalfWidth + 28} -18
+               L ${trailHeadX + caveHalfWidth + 16} 28
+               L ${trailHeadX + caveHalfWidth + 42} 48
+               L ${trailHeadX + cliffSpan * 0.72} 42
+               Z`}
+            fill="#1F3228"
+            stroke="#101D17"
+            strokeWidth="1.2"
+          />
+          {/* Right Rock Sunlit Rim Highlight */}
+          <path
+            d={`M ${trailHeadX + cliffSpan} 54
+               Q ${trailHeadX + cliffSpan * 0.78} 68 ${trailHeadX + cliffSpan * 0.52} 58
+               Q ${trailHeadX + caveHalfWidth + 36} 66 ${trailHeadX + caveHalfWidth + 14} 54
+               L ${trailHeadX + caveHalfWidth + 4} 42`}
+            fill="none"
+            stroke="url(#rockHighlightRim)"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          />
+          {/* Right Rock Crevice Fissure */}
+          <path
+            d={`M ${trailHeadX + caveHalfWidth + 24} 8
+               L ${trailHeadX + caveHalfWidth + 46} 24
+               L ${trailHeadX + caveHalfWidth + 68} 44`}
+            fill="none"
+            stroke="#08100C"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+
+          {/* 4. Natural Sculpted Stone Cave Arch / Cavern Vault (spanning across road) */}
+          <path
+            d={`M ${trailHeadX - caveHalfWidth - 14} -45
+               L ${trailHeadX + caveHalfWidth + 14} -45
+               L ${trailHeadX + caveHalfWidth + 16} 18
+               Q ${trailHeadX + caveHalfWidth + 6} 36 ${trailHeadX + caveHalfWidth + 2} 44
+               Q ${trailHeadX} ${isMobile ? 22 : 26} ${trailHeadX - caveHalfWidth - 2} 44
+               Q ${trailHeadX - caveHalfWidth - 6} 36 ${trailHeadX - caveHalfWidth - 16} 18
+               Z`}
+            fill="url(#caveArchSpanGrad)"
+            stroke="#0B1711"
+            strokeWidth="2"
+          />
+
+          {/* Under-arch Inner Cavern Ceiling Lip */}
+          <path
+            d={`M ${trailHeadX - caveHalfWidth - 4} 44
+               Q ${trailHeadX} ${isMobile ? 22 : 26} ${trailHeadX + caveHalfWidth + 4} 44
+               L ${trailHeadX + caveHalfWidth} 38
+               Q ${trailHeadX} ${isMobile ? 18 : 22} ${trailHeadX - caveHalfWidth} 38
+               Z`}
+            fill="#0F1B15"
+            stroke="#08110D"
+            strokeWidth="1.2"
+          />
+
+          {/* 5. Jagged Limestone Stalactites Hanging Down into Entrance */}
+          {/* Stalactite 1 (Left flank) */}
+          <polygon
+            points={`${trailHeadX - (isMobile ? 24 : 36)},${isMobile ? 28 : 34} ${trailHeadX - (isMobile ? 20 : 30)},${isMobile ? 46 : 52} ${trailHeadX - (isMobile ? 18 : 26)},${isMobile ? 28 : 34}`}
+            fill="url(#stalactiteCalciteGrad)"
+            stroke="#09120D"
+            strokeWidth="0.8"
+          />
+          {/* Stalactite 2 (Left center) */}
+          <polygon
+            points={`${trailHeadX - (isMobile ? 13 : 18)},${isMobile ? 25 : 30} ${trailHeadX - (isMobile ? 9 : 13)},${isMobile ? 48 : 56} ${trailHeadX - (isMobile ? 7 : 9)},${isMobile ? 25 : 30}`}
+            fill="url(#stalactiteCalciteGrad)"
+            stroke="#09120D"
+            strokeWidth="0.8"
+          />
+          {/* Stalactite 3 (Center) */}
+          <polygon
+            points={`${trailHeadX - 4},${isMobile ? 23 : 27} ${trailHeadX},${isMobile ? 38 : 44} ${trailHeadX + 4},${isMobile ? 23 : 27}`}
+            fill="url(#stalactiteCalciteGrad)"
+            stroke="#09120D"
+            strokeWidth="0.8"
+          />
+          {/* Stalactite 4 (Right center) */}
+          <polygon
+            points={`${trailHeadX + (isMobile ? 7 : 10)},${isMobile ? 25 : 30} ${trailHeadX + (isMobile ? 10 : 15)},${isMobile ? 47 : 54} ${trailHeadX + (isMobile ? 14 : 20)},${isMobile ? 25 : 30}`}
+            fill="url(#stalactiteCalciteGrad)"
+            stroke="#09120D"
+            strokeWidth="0.8"
+          />
+          {/* Stalactite 5 (Right flank) */}
+          <polygon
+            points={`${trailHeadX + (isMobile ? 19 : 27)},${isMobile ? 28 : 34} ${trailHeadX + (isMobile ? 23 : 33)},${isMobile ? 44 : 50} ${trailHeadX + (isMobile ? 26 : 38)},${isMobile ? 28 : 34}`}
+            fill="url(#stalactiteCalciteGrad)"
+            stroke="#09120D"
+            strokeWidth="0.8"
+          />
+
+          {/* 6. Wild Hanging Rainforest Vines & Creepers Drooping from Arch */}
+          <path
+            d={
+              isMobile
+                ? `M ${trailHeadX - 32} 24 Q ${trailHeadX - 36} 38 ${trailHeadX - 30} 54
+                   M ${trailHeadX - 16} 20 Q ${trailHeadX - 22} 36 ${trailHeadX - 14} 58
+                   M ${trailHeadX + 5} 18 Q ${trailHeadX + 2} 34 ${trailHeadX + 8} 52
+                   M ${trailHeadX + 26} 24 Q ${trailHeadX + 32} 40 ${trailHeadX + 24} 60`
+                : `M ${trailHeadX - 48} 28 Q ${trailHeadX - 56} 44 ${trailHeadX - 44} 66
+                   M ${trailHeadX - 24} 22 Q ${trailHeadX - 32} 42 ${trailHeadX - 22} 68
+                   M ${trailHeadX + 6} 20 Q ${trailHeadX + 2} 42 ${trailHeadX + 10} 64
+                   M ${trailHeadX + 38} 26 Q ${trailHeadX + 46} 48 ${trailHeadX + 34} 70`
+            }
+            fill="none"
+            stroke="#366347"
+            strokeWidth={isMobile ? '2' : '2.6'}
+            strokeLinecap="round"
+          />
+          {/* Vine Leaf Offshoots */}
+          <circle cx={trailHeadX - (isMobile ? 30 : 44)} cy={isMobile ? 44 : 54} r={isMobile ? 2.5 : 3.5} fill="#467B59" />
+          <circle cx={trailHeadX - (isMobile ? 15 : 23)} cy={isMobile ? 46 : 56} r={isMobile ? 2.5 : 3.5} fill="#518E67" />
+          <circle cx={trailHeadX + (isMobile ? 7 : 9)} cy={isMobile ? 42 : 52} r={isMobile ? 2.5 : 3.5} fill="#467B59" />
+          <circle cx={trailHeadX + (isMobile ? 26 : 36)} cy={isMobile ? 48 : 58} r={isMobile ? 2.5 : 3.5} fill="#518E67" />
+
+          {/* Fern Clusters growing on Cliff Ledges */}
+          {/* Left Fern */}
+          <g transform={`translate(${trailHeadX - caveHalfWidth - 14}, 46)`}>
+            <path d="M 0 0 C -8 -12 -16 -8 -22 -14" stroke="#48825C" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <path d="M 0 0 C -12 -6 -20 -2 -26 -4" stroke="#366847" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            <path d="M 0 0 C -8 4 -18 8 -24 6" stroke="#2A5438" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          </g>
+          {/* Right Fern */}
+          <g transform={`translate(${trailHeadX + caveHalfWidth + 14}, 46)`}>
+            <path d="M 0 0 C 8 -12 16 -8 22 -14" stroke="#48825C" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <path d="M 0 0 C 12 -6 20 -2 26 -4" stroke="#366847" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            <path d="M 0 0 C 8 4 18 8 24 6" stroke="#2A5438" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          </g>
+
+          {/* 7. Authentic Reserve Outpost Plaque mounted on the Arch Lintel */}
+          <g transform={`translate(${trailHeadX}, ${isMobile ? 4 : 8})`}>
+            {/* Weathered Teak Backing */}
+            <rect
+              x={isMobile ? -54 : -74}
+              y="-11"
+              width={isMobile ? 108 : 148}
+              height="20"
+              rx="4"
+              fill="#261A10"
+              stroke="#C99A4A"
+              strokeWidth="1.2"
+              strokeOpacity="0.85"
+            />
+            {/* Brass Corner Fasteners */}
+            <circle cx={isMobile ? -48 : -68} cy="-1" r="1.5" fill="#E4B865" />
+            <circle cx={isMobile ? 48 : 68} cy="-1" r="1.5" fill="#E4B865" />
+            {/* Plaque Typography */}
+            <text
+              x="0"
+              y="2.5"
+              textAnchor="middle"
+              fill="#F4EBDA"
+              fontSize={isMobile ? "7.5" : "9"}
+              fontWeight="bold"
+              fontFamily="monospace"
+              letterSpacing="0.12em"
+            >
+              GATE 01 · CANYON CAVE
+            </text>
+          </g>
+        </g>
 
         {/* Rock Cave / Jungle Canopy Overpass Arch centered on the Ramganga Bridge Crossing */}
         <g
